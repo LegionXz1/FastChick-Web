@@ -1,67 +1,67 @@
 {
   "killerAvatarUrl": {
     "type": "image-input",
-    "label": "Top-Left Avatar Image (URL)",
+    "label": "ลิงก์รูปภาพโปรไฟล์มุมซ้ายบน",
     "value": "https://i.ibb.co/gMJD9F3c/wesker-stickman.jpg",
     "group": "Custom Text & Avatar"
   },
   "killerRoleTitle": {
     "type": "text",
-    "label": "Scoreboard Title Text",
+    "label": "ข้อความหัวเรื่องป้ายคะแนน",
     "value": "KILLER",
     "group": "Custom Text & Avatar"
   },
   "killerSubText": {
     "type": "text",
-    "label": "Subtitle Text",
+    "label": "ข้อความสถานะด้านล่าง",
     "value": "(!kwin / !kdraw / !klose)",
     "group": "Custom Text & Avatar"
   },
   "widgetScale": {
     "type": "number",
-    "label": "ขนาดขยาย Overlay",
+    "label": "ขนาดการแสดงผลบนจอ",
     "value": 100,
     "group": "Custom Text & Avatar"
   },
   "killerStat1Title": {
     "type": "text",
-    "label": "Left Stat Title",
+    "label": "ชื่อช่องคะแนนซ้าย",
     "value": "WINS",
     "group": "Custom Text & Avatar"
   },
   "killerStat3Title": {
     "type": "text",
-    "label": "Middle Stat Title",
+    "label": "ชื่อช่องคะแนนกลาง",
     "value": "DRAWS",
     "group": "Custom Text & Avatar"
   },
   "killerStat2Title": {
     "type": "text",
-    "label": "Right Stat Title",
+    "label": "ชื่อช่องคะแนนขวา",
     "value": "LOSES",
     "group": "Custom Text & Avatar"
   },
   "titleColor": {
     "type": "colorpicker",
-    "label": "Scoreboard Title Color",
+    "label": "สีข้อความหัวเรื่อง",
     "value": "#ffffff",
     "group": "Color Customization"
   },
   "subTextColor": {
     "type": "colorpicker",
-    "label": "Subtitle Text Color",
+    "label": "สีข้อความสถานะด้านล่าง",
     "value": "#aaaaaa",
     "group": "Color Customization"
   },
   "statTitleColor": {
     "type": "colorpicker",
-    "label": "Stat Titles Color (KILLS/DRAWS/ESCAPES)",
+    "label": "สีชื่อช่องคะแนน",
     "value": "#aaaaaa",
     "group": "Color Customization"
   },
   "statNumberColor": {
     "type": "colorpicker",
-    "label": "Score Numbers Color",
+    "label": "สีตัวเลขคะแนน",
     "value": "#ffffff",
     "group": "Color Customization"
   },
@@ -75,7 +75,7 @@
     "type": "checkbox",
     "label": "เปิดเสียงเอฟเฟกต์",
     "value": true,
-    "group": "เสียงเอฟเฟกต์ (Sound Effects)"
+    "group": "Audio"
   },
   "soundVolume": {
     "type": "slider",
@@ -84,23 +84,23 @@
     "min": 0,
     "max": 100,
     "step": 5,
-    "group": "เสียงเอฟเฟกต์ (Sound Effects)"
+    "group": "Audio"
   },
   "initKills": {
     "type": "number",
-    "label": "Initial Kills",
+    "label": "คะแนนเริ่มต้นช่องซ้าย",
     "value": 0,
     "group": "Initial Scores"
   },
   "initKillerDraws": {
     "type": "number",
-    "label": "Initial Draws",
+    "label": "คะแนนเริ่มต้นช่องกลาง",
     "value": 0,
     "group": "Initial Scores"
   },
   "initKillerEscapes": {
     "type": "number",
-    "label": "Initial Escapes",
+    "label": "คะแนนเริ่มต้นช่องขวา",
     "value": 0,
     "group": "Initial Scores"
   }

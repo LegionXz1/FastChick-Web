@@ -2524,10 +2524,10 @@ function Dashboard() {
                                     type="button"
                                     onClick={() => handleTriggerPreview('survivor')}
                                     className="btn-preview-action accent"
-                                    title="ทดสอบสุ่มเปิร์ค Survivor (ผู้รอดชีวิต)"
+                                    title="ทดสอบสุ่มเปิร์คผู้รอดชีวิต"
                                   >
                                     <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                                      <Dices size={14} /> สุ่ม Survivor
+                                      <Dices size={14} /> สุ่มเปิร์คผู้รอดชีวิต
                                     </span>
                                   </button>
                                   <button
@@ -2535,10 +2535,10 @@ function Dashboard() {
                                     onClick={() => handleTriggerPreview('killer')}
                                     className="btn-preview-action"
                                     style={{ borderColor: 'rgba(239, 68, 68, 0.4)', color: '#f87171' }}
-                                    title="ทดสอบสุ่มเปิร์ค Killer (ฆาตกร)"
+                                    title="ทดสอบสุ่มเปิร์คฆาตกร"
                                   >
                                     <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                                      <Dices size={14} /> สุ่ม Killer
+                                      <Dices size={14} /> สุ่มเปิร์คฆาตกร
                                     </span>
                                   </button>
                                 </div>
@@ -2767,12 +2767,12 @@ function Dashboard() {
                               <span style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                                 {selectedWidget === 'loyalty-card' ? <Award size={16} /> : <Ban size={16} />}
                                 {selectedWidget === 'loyalty-card'
-                                  ? 'สรุปยอดสะสม (Leaderboard)'
+                                  ? 'สรุปยอดสะสม'
                                   : selectedWidget === 'dbd-perks'
-                                    ? 'จัดการเปิร์ค & Blacklist'
+                                    ? 'คัดกรองเปิร์ค'
                                     : selectedWidget === 'valorant-agent'
-                                      ? 'จัดการตัวละคร & Blacklist'
-                                      : 'จัดการคิลเลอร์ & Blacklist'}
+                                      ? 'คัดกรองตัวละคร'
+                                      : 'คัดกรองฆาตกร'}
                               </span>
                             </button>
                             <button
@@ -3447,7 +3447,7 @@ function Dashboard() {
                                     <div>
                                       <div className="dbd-blacklist-title">
                                         <Ban size={18} style={{ color: '#FF453A' }} />
-                                        <span>เลือกเปิร์คที่ไม่ต้องการ / ยังไม่มี (Blacklist)</span>
+                                        <span>เลือกเปิร์คที่ไม่ต้องการให้สุ่ม</span>
                                       </div>
                                       <div className="dbd-blacklist-desc">
                                         ค้นหาเปิร์คหรือตัวละคร แล้วคลิกเพื่อติ๊ก <strong>"ตัดออก"</strong> จากการสุ่ม ระบบจะบันทึกและซิงค์ไปยัง OBS ทันที
@@ -3682,7 +3682,7 @@ function Dashboard() {
                                     <div>
                                       <div className="dbd-blacklist-title">
                                         <Ban size={18} style={{ color: '#FF453A' }} />
-                                        <span>เลือกคิลเลอร์ที่ไม่ต้องการให้สุ่ม (Blacklist & Exclude)</span>
+                                        <span>เลือกฆาตกรที่ไม่ต้องการให้สุ่ม</span>
                                       </div>
                                       <div className="dbd-blacklist-desc">
                                         ค้นหาชื่อคิลเลอร์ แล้วคลิกเพื่อติ๊ก <strong>"ตัดออก"</strong> จากการสุ่ม ระบบจะบันทึกและซิงค์ไปยัง OBS ทันที (คิลเลอร์ที่ถูกตัดออกจะไม่ถูกสุ่มได้)
@@ -3856,7 +3856,7 @@ function Dashboard() {
                                     <div>
                                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#FF4655', fontWeight: 800, fontSize: '1.05rem', letterSpacing: '1px' }}>
                                         <Crosshair size={18} />
-                                        <span>เลือกตัวละครที่ต้องการ / ตัดออกจากการสุ่ม (Agent Pool & Blacklist)</span>
+                                        <span>เลือกตัวละครที่ไม่ต้องการให้สุ่ม</span>
                                       </div>
                                       <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
                                         คลิกที่การ์ดตัวละครเพื่อสลับสถานะ <strong>"เปิดให้สุ่ม"</strong> หรือ <strong>"ตัดออก (Banned)"</strong> ระบบจะจำกัดเฉพาะตัวที่คุณต้องการเล่นทันที

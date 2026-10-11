@@ -10,19 +10,19 @@
   },
   "enableVisualOverlay": {
     "type": "checkbox",
-    "label": "แสดงผลกราฟิก Pop-up บนจอ OBS",
+    "label": "แสดงภาพบนหน้าจอสตรีม",
     "value": true,
     "group": "Display Settings"
   },
   "showUserPill": {
     "type": "checkbox",
-    "label": "แสดงแถบชื่อผู้แลก / สตรีมเมอร์",
+    "label": "แสดงชื่อคนแลกแต้ม",
     "value": true,
     "group": "Display Settings"
   },
   "showPerkName": {
     "type": "checkbox",
-    "label": "แสดงชื่อเปิร์คใต้ไอคอน",
+    "label": "แสดงชื่อเปิร์ค",
     "value": true,
     "group": "Display Settings"
   },
@@ -34,13 +34,13 @@
   },
   "showDiamondBg": {
     "type": "checkbox",
-    "label": "แสดงกรอบเพชร DBD หลังไอคอน",
+    "label": "แสดงกรอบเพชรหลังไอคอน",
     "value": true,
     "group": "Display Settings"
   },
   "iconScale": {
     "type": "slider",
-    "label": "ขนาดไอคอนเปิร์ค (Icon Size px สำหรับจอ 1080p)",
+    "label": "ขนาดไอคอนเปิร์ค",
     "value": 280,
     "min": 120,
     "max": 450,
@@ -49,7 +49,7 @@
   },
   "displayDuration": {
     "type": "slider",
-    "label": "ระยะเวลาแสดงผล (วินาที)",
+    "label": "ระยะเวลาแสดงผลค้างไว้บนจอ (วินาที)",
     "value": 10,
     "min": 5,
     "max": 60,
@@ -58,13 +58,13 @@
   },
   "rewardNameSurvivor": {
     "type": "text",
-    "label": "ชื่อรางวัล Channel Points: สุ่ม Survivor (ผู้รอดชีวิต)",
+    "label": "ชื่อแต้มช่อง Twitch สำหรับสุ่มผู้รอดชีวิต",
     "value": "สุ่มเปิร์ค ผู้รอดชีวิต",
     "group": "Twitch & Bot Settings"
   },
   "rewardNameKiller": {
     "type": "text",
-    "label": "ชื่อรางวัล Channel Points: สุ่ม Killer (ฆาตกร)",
+    "label": "ชื่อแต้มช่อง Twitch สำหรับสุ่มฆาตกร",
     "value": "สุ่มเปิร์ค ฆาตกร",
     "group": "Twitch & Bot Settings"
   },

@@ -1,7 +1,7 @@
 {
   "rewardName": {
     "type": "text",
-    "label": "ชื่อรางวัล Channel Points",
+    "label": "ชื่อแต้มช่อง Twitch สำหรับสุ่มฆาตกร",
     "value": "Random Killer",
     "group": "Twitch & Bot Settings"
   },
@@ -13,70 +13,70 @@
   },
   "chatTemplate": {
     "type": "text",
-    "label": "ข้อความส่งลงแชท",
+    "label": "รูปแบบข้อความในแชท",
     "value": "[Roll] {username} rolled -> {killer}",
     "group": "Twitch & Bot Settings"
   },
   "enableVisualOverlay": {
     "type": "checkbox",
-    "label": "แสดงกราฟิก Pop-up บนจอ OBS",
+    "label": "แสดงภาพบนหน้าจอสตรีม",
     "value": true,
-    "group": "Display Settings (สไตล์และการแสดงผล)"
+    "group": "Display Settings"
   },
   "showHeader": {
     "type": "checkbox",
-    "label": "แสดงส่วนหัว",
+    "label": "แสดงแถบหัวเรื่องด้านบน",
     "value": true,
-    "group": "Display Settings (สไตล์และการแสดงผล)"
+    "group": "Display Settings"
   },
   "showTargetUser": {
     "type": "checkbox",
-    "label": "แสดงชื่อผู้ชมที่แลกแต้ม",
+    "label": "แสดงชื่อคนแลกแต้ม",
     "value": true,
-    "group": "Display Settings (สไตล์และการแสดงผล)"
+    "group": "Display Settings"
   },
   "showDividerText": {
     "type": "checkbox",
-    "label": "แสดงข้อความคั่น",
+    "label": "แสดงข้อความคั่นกลาง",
     "value": true,
-    "group": "Display Settings (สไตล์และการแสดงผล)"
+    "group": "Display Settings"
   },
   "showKillerName": {
     "type": "checkbox",
-    "label": "แสดงชื่อคิลเลอร์",
+    "label": "แสดงชื่อฆาตกร",
     "value": true,
-    "group": "Display Settings (สไตล์และการแสดงผล)"
+    "group": "Display Settings"
   },
   "showSubtitle": {
     "type": "checkbox",
-    "label": "แสดงข้อความสถานะย่อย",
+    "label": "แสดงข้อความสถานะการสุ่ม",
     "value": true,
-    "group": "Display Settings (สไตล์และการแสดงผล)"
+    "group": "Display Settings"
   },
   "showScanEffects": {
     "type": "checkbox",
-    "label": "แสดงเส้นเลเซอร์และขอบมุมสแกน",
+    "label": "แสดงเอฟเฟกต์เส้นเลเซอร์และกรอบสแกน",
     "value": true,
-    "group": "Display Settings (สไตล์และการแสดงผล)"
+    "group": "Display Settings"
   },
   "photoSize": {
     "type": "slider",
-    "label": "ขนาดรูปภาพคิลเลอร์",
+    "label": "ขนาดรูปภาพฆาตกร",
     "value": 480,
     "min": 180,
     "max": 900,
     "step": 10,
-    "group": "Display Settings (สไตล์และการแสดงผล)"
+    "group": "Display Settings"
   },
   "headerText": {
     "type": "text",
-    "label": "ข้อความส่วนหัว",
+    "label": "ข้อความหัวเรื่องด้านบน",
     "value": "Killer Roulette",
     "group": "Texts"
   },
   "dividerText": {
     "type": "text",
-    "label": "ข้อความคั่น",
+    "label": "ข้อความคั่นกลาง",
     "value": "The Entity Chooses",
     "group": "Texts"
   },
@@ -94,7 +94,7 @@
   },
   "headerFontSize": {
     "type": "slider",
-    "label": "Header Title Font Size (px)",
+    "label": "ขนาดตัวอักษรหัวเรื่อง",
     "value": 34,
     "min": 14,
     "max": 80,
@@ -103,7 +103,7 @@
   },
   "targetFontSize": {
     "type": "slider",
-    "label": "Target / Username Font Size (px)",
+    "label": "ขนาดตัวอักษรชื่อคนแลก",
     "value": 24,
     "min": 12,
     "max": 60,
@@ -112,7 +112,7 @@
   },
   "dividerFontSize": {
     "type": "slider",
-    "label": "Divider Text Font Size (px)",
+    "label": "ขนาดตัวอักษรข้อความคั่นกลาง",
     "value": 20,
     "min": 10,
     "max": 50,
@@ -121,7 +121,7 @@
   },
   "resultNameFontSize": {
     "type": "slider",
-    "label": "Killer Name Font Size (px)",
+    "label": "ขนาดตัวอักษรชื่อฆาตกร",
     "value": 56,
     "min": 20,
     "max": 120,
@@ -130,7 +130,7 @@
   },
   "subtitleFontSize": {
     "type": "slider",
-    "label": "Subtitle Font Size (px)",
+    "label": "ขนาดตัวอักษรข้อความสถานะ",
     "value": 20,
     "min": 10,
     "max": 50,
@@ -139,43 +139,43 @@
   },
   "accentColor": {
     "type": "colorpicker",
-    "label": "Gold Accent Color",
+    "label": "โทนสีหลัก",
     "value": "#c9a84c",
     "group": "Colors"
   },
   "headerColor": {
     "type": "colorpicker",
-    "label": "Header Title Color",
+    "label": "สีข้อความหัวเรื่อง",
     "value": "#c9a84c",
     "group": "Colors"
   },
   "targetColor": {
     "type": "colorpicker",
-    "label": "Target / Username Color",
+    "label": "สีชื่อคนแลก",
     "value": "#f3f4f6",
     "group": "Colors"
   },
   "dividerColor": {
     "type": "colorpicker",
-    "label": "Divider Text Color",
+    "label": "สีข้อความคั่นกลาง",
     "value": "#c9a84c",
     "group": "Colors"
   },
   "resultNameColor": {
     "type": "colorpicker",
-    "label": "Killer Name Color",
+    "label": "สีชื่อฆาตกร",
     "value": "#f5d07a",
     "group": "Colors"
   },
   "bloodColor": {
     "type": "colorpicker",
-    "label": "Laser & Subtitle Color",
+    "label": "สีเส้นเลเซอร์และข้อความสถานะ",
     "value": "#ef4444",
     "group": "Colors"
   },
   "strokeSize": {
     "type": "slider",
-    "label": "Text Stroke Width (px)",
+    "label": "ความหนาเส้นขอบตัวอักษร",
     "value": 2,
     "min": 0,
     "max": 10,
@@ -184,43 +184,43 @@
   },
   "strokeColor": {
     "type": "colorpicker",
-    "label": "Main Text Stroke Color",
+    "label": "สีเส้นขอบตัวอักษรทั่วไป",
     "value": "#000000",
     "group": "Text Stroke"
   },
   "headerStrokeColor": {
     "type": "colorpicker",
-    "label": "Header Title Stroke Color",
+    "label": "สีเส้นขอบข้อความหัวเรื่อง",
     "value": "#000000",
     "group": "Text Stroke"
   },
   "targetStrokeColor": {
     "type": "colorpicker",
-    "label": "Target / Username Stroke Color",
+    "label": "สีเส้นขอบชื่อคนแลก",
     "value": "#000000",
     "group": "Text Stroke"
   },
   "dividerStrokeColor": {
     "type": "colorpicker",
-    "label": "Divider Text Stroke Color",
+    "label": "สีเส้นขอบข้อความคั่นกลาง",
     "value": "#000000",
     "group": "Text Stroke"
   },
   "resultNameStrokeColor": {
     "type": "colorpicker",
-    "label": "Killer Name Stroke Color",
+    "label": "สีเส้นขอบชื่อฆาตกร",
     "value": "#000000",
     "group": "Text Stroke"
   },
   "subtitleStrokeColor": {
     "type": "colorpicker",
-    "label": "Subtitle Stroke Color",
+    "label": "สีเส้นขอบข้อความสถานะ",
     "value": "#000000",
     "group": "Text Stroke"
   },
   "spinDuration": {
     "type": "slider",
-    "label": "Search Duration (seconds)",
+    "label": "ระยะเวลาสุ่มหมุนภาพ (วินาที)",
     "value": 5,
     "min": 3,
     "max": 10,
@@ -229,7 +229,7 @@
   },
   "hideAfter": {
     "type": "slider",
-    "label": "Show Result For (seconds)",
+    "label": "ระยะเวลาแสดงผลค้างไว้บนจอ (วินาที)",
     "value": 8,
     "min": 3,
     "max": 20,
@@ -238,7 +238,7 @@
   },
   "excludedKillers": {
     "type": "custom",
-    "label": "คิลเลอร์ที่ไม่ต้องการให้สุ่ม",
+    "label": "ฆาตกรที่ไม่ต้องการให้สุ่ม",
     "value": [],
     "group": "Excluded Killers"
   },

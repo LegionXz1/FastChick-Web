@@ -2076,7 +2076,7 @@ export default function SecretSettings() {
                           onClick={() => handleTriggerPreview('survivor')}
                         >
                           <Play size={15} />
-                          <span>สุ่มเปิร์ค Survivor</span>
+                          <span>สุ่มเปิร์คผู้รอดชีวิต</span>
                         </button>
                         <button
                           type="button"
@@ -2084,7 +2084,7 @@ export default function SecretSettings() {
                           onClick={() => handleTriggerPreview('killer')}
                         >
                           <Skull size={15} />
-                          <span>สุ่มเปิร์ค Killer</span>
+                          <span>สุ่มเปิร์คฆาตกร</span>
                         </button>
                       </>
                     )}
@@ -3220,14 +3220,14 @@ export default function SecretSettings() {
                           className={`category-tab-btn ${dbdRole === 'survivor' ? 'active' : ''}`}
                           onClick={() => setDbdRole('survivor')}
                         >
-                          Survivor ({dbdPerksList.survivor?.length || 0})
+                          ผู้รอดชีวิต ({dbdPerksList.survivor?.length || 0})
                         </button>
                         <button
                           type="button"
                           className={`category-tab-btn ${dbdRole === 'killer' ? 'active' : ''}`}
                           onClick={() => setDbdRole('killer')}
                         >
-                          Killer ({dbdPerksList.killer?.length || 0})
+                          ฆาตกร ({dbdPerksList.killer?.length || 0})
                         </button>
                         {status.isAdmin && (
                           <button
@@ -3331,7 +3331,7 @@ export default function SecretSettings() {
                 {selectedWidget === 'random-killer' && (
                   <div className="setting-card">
                     <h4 className="setting-card-title">คัดกรองฆาตกรที่ไม่ต้องการให้สุ่ม</h4>
-                    <p className="setting-card-desc">คลิกที่ภาพคิลเลอร์เพื่อเปิด/ปิดการสุ่ม</p>
+                    <p className="setting-card-desc">คลิกที่ภาพฆาตกรเพื่อเปิดหรือปิดการสุ่ม</p>
 
                     <div style={{
                       maxHeight: '380px',
@@ -3386,7 +3386,7 @@ export default function SecretSettings() {
                     <div className="setting-card-header">
                       <div>
                         <h4 className="setting-card-title">คัดกรองตัวละคร Valorant</h4>
-                        <p className="setting-card-desc">คลิกที่ตัวละครเพื่อเปิด/ปิดการสุ่ม</p>
+                        <p className="setting-card-desc">คลิกที่ตัวละครเพื่อเปิดหรือปิดการสุ่ม</p>
                       </div>
                       <button
                         type="button"

@@ -15,16 +15,16 @@
     "value": "all",
     "options": {
       "all": "สุ่มได้ทุกตำแหน่ง",
-      "duelist": "เฉพาะ Duelist (สายเข้าทำ)",
-      "initiator": "เฉพาะ Initiator (สายเปิดข้อมูล)",
-      "controller": "เฉพาะ Controller (สายวางควัน)",
-      "sentinel": "เฉพาะ Sentinel (สายตั้งรับ/คุมพื้นที่)"
+      "duelist": "เฉพาะตำแหน่ง Duelist",
+      "initiator": "เฉพาะตำแหน่ง Initiator",
+      "controller": "เฉพาะตำแหน่ง Controller",
+      "sentinel": "เฉพาะตำแหน่ง Sentinel"
     },
     "group": "Game Settings"
   },
   "displayDuration": {
     "type": "slider",
-    "label": "ระยะเวลาแสดงผลบนหน้าจอ (วินาที)",
+    "label": "ระยะเวลาแสดงผลค้างไว้บนจอ (วินาที)",
     "value": 9,
     "min": 4,
     "max": 30,
@@ -39,25 +39,25 @@
   },
   "showAbilities": {
     "type": "checkbox",
-    "label": "แสดงไอคอนสกิลประจำตัว 4 สกิล",
+    "label": "แสดงไอคอนสกิลประจำตัว",
     "value": true,
     "group": "Display Settings"
   },
   "showRequester": {
     "type": "checkbox",
-    "label": "แสดงแถบชื่อผู้ขอ / ผู้แลกแต้ม",
+    "label": "แสดงชื่อคนแลกแต้ม",
     "value": true,
     "group": "Display Settings"
   },
   "enableSound": {
     "type": "checkbox",
-    "label": "เปิดเสียงเอฟเฟกต์ SFX",
+    "label": "เปิดเสียงเอฟเฟกต์",
     "value": true,
     "group": "Audio Settings"
   },
   "soundVolume": {
     "type": "slider",
-    "label": "ระดับความดังเสียง SFX",
+    "label": "ระดับเสียงเอฟเฟกต์",
     "value": 40,
     "min": 0,
     "max": 100,
@@ -66,25 +66,25 @@
   },
   "rewardName": {
     "type": "text",
-    "label": "ชื่อรางวัล Channel Points ใน Twitch",
+    "label": "ชื่อแต้มช่อง Twitch สำหรับสุ่มตัวละคร",
     "value": "สุ่มตัวละคร Valorant",
     "group": "Twitch Integration"
   },
   "chatCommand": {
     "type": "text",
-    "label": "คำสั่งในแชท Twitch (Chat Command เช่น !agent, !val)",
+    "label": "คำสั่งสุ่มตัวละครในแชท",
     "value": "!agent",
     "group": "Twitch Integration"
   },
   "enableChatReply": {
     "type": "checkbox",
-    "label": "ให้บอทส่งข้อความตอบกลับผลลัพธ์ในแชท Twitch",
+    "label": "ส่งผลลัพธ์ลงแชท Twitch",
     "value": true,
     "group": "Twitch Integration"
   },
   "chatTemplate": {
     "type": "text",
-    "label": "รูปแบบข้อความตอบกลับในแชท",
+    "label": "รูปแบบข้อความในแชท",
     "value": "[Valorant] @{username} สุ่มได้ตัวละคร: {agent} ({role})!",
     "group": "Twitch Integration"
   }

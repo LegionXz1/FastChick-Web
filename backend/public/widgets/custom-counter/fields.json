@@ -3,44 +3,44 @@
     "type": "text",
     "label": "ชื่อสถิติ",
     "value": "ได้ออกประตู",
-    "group": "ตั้งค่าทั่วไป (General)"
+    "group": "General Settings"
   },
   "currentCount": {
     "type": "number",
     "label": "ตัวเลขปัจจุบัน",
     "value": 0,
-    "group": "ตั้งค่าทั่วไป (General)"
+    "group": "General Settings"
   },
   "unitText": {
     "type": "text",
     "label": "หน่วยนับ",
     "value": "ครั้ง",
-    "group": "ตั้งค่าทั่วไป (General)"
+    "group": "General Settings"
   },
   "stepAmount": {
     "type": "number",
-    "label": "จำนวนที่เพิ่ม/ลดต่อครั้ง",
+    "label": "จำนวนที่เพิ่มหรือลดต่อครั้ง",
     "value": 1,
-    "group": "ตั้งค่าทั่วไป (General)"
+    "group": "General Settings"
   },
   "themePreset": {
     "type": "dropdown",
-    "label": "สกินและธีมแสดงผล",
+    "label": "รูปแบบการแสดงผล",
     "value": "minimal-glass",
     "options": {
       "clean-hud": "Clean HUD",
       "minimal-clean": "Minimal Compact",
       "minimal-glass": "Minimal Glass",
       "cyberpunk": "Neon Cyberpunk",
-      "souls": "Souls / Dark Fantasy",
+      "souls": "Souls Dark Fantasy",
       "arcade": "Retro Arcade",
       "mecha-hud": "Mecha Cockpit"
     },
-    "group": "รูปแบบและการแสดงผล (Design & Styles)"
+    "group": "Display Settings"
   },
   "fontFamily": {
     "type": "dropdown",
-    "label": "ฟอนต์ตัวอักษร",
+    "label": "รูปแบบตัวอักษร",
     "value": "Prompt",
     "options": {
       "Prompt": "Prompt",
@@ -53,7 +53,7 @@
       "Pridi": "Pridi",
       "Sarabun": "Sarabun"
     },
-    "group": "รูปแบบและการแสดงผล (Design & Styles)"
+    "group": "Display Settings"
   },
   "iconPreset": {
     "type": "dropdown",
@@ -72,27 +72,27 @@
       "target": "Target",
       "zap": "Lightning",
       "alert": "Alert",
-      "none": "None"
+      "none": "ไม่แสดงไอคอน"
     },
-    "group": "รูปแบบและการแสดงผล (Design & Styles)"
+    "group": "Display Settings"
   },
   "customIconUrl": {
     "type": "image-input",
-    "label": "URL รูปภาพไอคอนกำหนดเอง (เว้นว่างไว้เพื่อใช้ไอคอน Preset)",
+    "label": "ลิงก์รูปภาพไอคอนกำหนดเอง",
     "value": "",
-    "group": "รูปแบบและการแสดงผล (Design & Styles)"
+    "group": "Display Settings"
   },
   "accentColor": {
     "type": "colorpicker",
-    "label": "สีเน้นหลัก",
+    "label": "โทนสีหลัก",
     "value": "#f59e0b",
-    "group": "รูปแบบและการแสดงผล (Design & Styles)"
+    "group": "Display Settings"
   },
   "borderColor": {
     "type": "colorpicker",
-    "label": "สีกรอบ",
+    "label": "สีเส้นขอบ",
     "value": "#f59e0b",
-    "group": "รูปแบบและการแสดงผล (Design & Styles)",
+    "group": "Display Settings",
     "showIf": {
       "themePreset": [
         "minimal-clean",
@@ -106,9 +106,9 @@
   },
   "badgeBgColor": {
     "type": "colorpicker",
-    "label": "สีพื้นหลังการ์ด",
+    "label": "สีพื้นหลัง",
     "value": "#0f172a",
-    "group": "รูปแบบและการแสดงผล (Design & Styles)",
+    "group": "Display Settings",
     "showIf": {
       "themePreset": [
         "minimal-clean",
@@ -122,43 +122,43 @@
   },
   "textColor": {
     "type": "colorpicker",
-    "label": "สีข้อความ",
+    "label": "สีตัวอักษร",
     "value": "#ffffff",
-    "group": "รูปแบบและการแสดงผล (Design & Styles)"
+    "group": "Display Settings"
   },
   "counterScale": {
     "type": "number",
-    "label": "ขนาดขยาย Overlay",
+    "label": "ขนาดการแสดงผลบนจอ",
     "value": 100,
-    "group": "รูปแบบและการแสดงผล (Design & Styles)"
+    "group": "Display Settings"
   },
   "soundEnabled": {
     "type": "checkbox",
     "label": "เปิดเสียงเอฟเฟกต์เมื่อตัวเลขเปลี่ยน",
     "value": true,
-    "group": "เสียงเอฟเฟกต์ (Audio)"
+    "group": "Audio"
   },
   "soundVolume": {
     "type": "number",
-    "label": "ระดับเสียง",
+    "label": "ระดับเสียงเอฟเฟกต์",
     "value": 70,
-    "group": "เสียงเอฟเฟกต์ (Audio)"
+    "group": "Audio"
   },
   "customSoundUrl": {
     "type": "text",
-    "label": "ลิงก์ไฟล์เสียงกำหนดเอง",
+    "label": "ลิงก์ไฟล์เสียงเอฟเฟกต์กำหนดเอง",
     "value": "",
-    "group": "เสียงเอฟเฟกต์ (Audio)"
+    "group": "Audio"
   },
   "enableChatCmd": {
     "type": "checkbox",
-    "label": "เปิดรับคำสั่งผ่าน Twitch Chat",
+    "label": "เปิดใช้งานคำสั่งในแชท Twitch",
     "value": true,
     "group": "Twitch Chat Commands"
   },
   "commandPrefix": {
     "type": "text",
-    "label": "คำสั่งแชทหลัก",
+    "label": "คำสั่งนับสถิติในแชท",
     "value": "!count",
     "group": "Twitch Chat Commands"
   },
@@ -174,13 +174,13 @@
   },
   "enableChatReply": {
     "type": "checkbox",
-    "label": "ให้บอทส่งข้อความสรุปแต้มลงในแชท",
+    "label": "ส่งผลลัพธ์ลงแชท Twitch",
     "value": true,
     "group": "Twitch Chat Commands"
   },
   "chatReplyTemplate": {
     "type": "text",
-    "label": "รูปแบบข้อความตอบกลับในแชท",
+    "label": "รูปแบบข้อความในแชท",
     "value": "{user} อัปเดต {title} เป็น {count} {unit} แล้ว!",
     "group": "Twitch Chat Commands"
   }

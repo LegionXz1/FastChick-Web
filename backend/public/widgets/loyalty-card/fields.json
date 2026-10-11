@@ -7,48 +7,48 @@
   },
   "rewardName": {
     "type": "text",
-    "label": "Twitch Channel Point Reward Name",
+    "label": "ชื่อแต้มช่อง Twitch สำหรับเช็คอิน",
     "value": "Check-in",
     "group": "Twitch Triggers"
   },
   "cardTitle": {
     "type": "text",
-    "label": "Card Header Title",
+    "label": "ข้อความหัวเรื่องบนการ์ด",
     "value": "Loyalty Card",
     "group": "Typography"
   },
   "fontFamily": {
     "type": "dropdown",
-    "label": "Font Family",
+    "label": "รูปแบบตัวอักษร",
     "value": "Quicksand",
     "options": {
-      "Quicksand": "Quicksand (Cute & Rounded)",
-      "Fredoka": "Fredoka (Bubbly & Playful)",
-      "Nunito": "Nunito (Soft & Clean)",
-      "Mali": "Mali (Handwritten Journal - Thai)",
-      "Itim": "Itim (Friendly Casual - Thai)",
-      "Kanit": "Kanit (Modern & Bold - Thai)",
-      "Prompt": "Prompt (Sleek Modern - Thai)",
-      "Kodchasan": "Kodchasan (Cute Quirky - Thai)",
-      "Chakra Petch": "Chakra Petch (Tech & Gaming - Thai)",
-      "Charm": "Charm (Elegant Script - Thai)",
-      "Comfortaa": "Comfortaa (Minimal Rounded)",
-      "Outfit": "Outfit (Modern Premium)",
-      "Poppins": "Poppins (Clean Geometric)",
-      "Sniglet": "Sniglet (Cute Bubble)"
+      "Quicksand": "Quicksand",
+      "Fredoka": "Fredoka",
+      "Nunito": "Nunito",
+      "Mali": "Mali",
+      "Itim": "Itim",
+      "Kanit": "Kanit",
+      "Prompt": "Prompt",
+      "Kodchasan": "Kodchasan",
+      "Chakra Petch": "Chakra Petch",
+      "Charm": "Charm",
+      "Comfortaa": "Comfortaa",
+      "Outfit": "Outfit",
+      "Poppins": "Poppins",
+      "Sniglet": "Sniglet"
     },
     "group": "Typography"
   },
   "notebookTabText": {
     "type": "text",
-    "label": "Top Right Index Tab Text",
+    "label": "ข้อความแท็บมุมขวาบน",
     "value": "NOTES",
     "group": "Typography"
   },
   "remainingTemplate": {
     "type": "text",
-    "label": "Remaining Note Template ({remaining} = count left)",
-    "value": "{remaining} more stamp(s) needed to complete your card!",
+    "label": "รูปแบบข้อความบอกแต้มที่เหลือ",
+    "value": "ขาดอีก {remaining} แต้มจะครบการ์ดสะสม!",
     "group": "Typography"
   },
   "showRemainingNote": {
@@ -59,13 +59,13 @@
   },
   "checkinText": {
     "type": "text",
-    "label": "Count Prefix",
-    "value": "Count:",
+    "label": "ข้อความนำหน้านับจำนวน",
+    "value": "เช็คอินแล้ว:",
     "group": "Typography"
   },
   "colorPreset": {
     "type": "dropdown",
-    "label": "Color Theme Preset",
+    "label": "โทนสีสำเร็จรูป",
     "value": "lavender",
     "options": {
       "lavender": "Pastel Lavender",
@@ -74,49 +74,49 @@
       "milktea": "Milk Tea Caramel",
       "ocean": "Ocean Sky Blue",
       "midnight": "Midnight Dark Mode",
-      "custom": "Custom Colors (Manual)"
+      "custom": "กำหนดสีเอง"
     },
     "group": "Theme Colors"
   },
   "accentColor": {
     "type": "colorpicker",
-    "label": "Main Accent Color (If Custom)",
+    "label": "โทนสีหลัก",
     "value": "#8e90f6",
     "group": "Theme Colors"
   },
   "bgColor": {
     "type": "colorpicker",
-    "label": "Card Background Color (If Custom)",
+    "label": "สีพื้นหลังการ์ด",
     "value": "#fffdfa",
     "group": "Theme Colors"
   },
   "stackColor": {
     "type": "colorpicker",
-    "label": "Stack Back Card Color (If Custom)",
+    "label": "สีการ์ดซ้อนด้านหลัง",
     "value": "#e0e2ff",
     "group": "Theme Colors"
   },
   "borderColor": {
     "type": "colorpicker",
-    "label": "Card Border Color (If Custom)",
+    "label": "สีเส้นขอบการ์ด",
     "value": "#8e90f6",
     "group": "Theme Colors"
   },
   "textColor": {
     "type": "colorpicker",
-    "label": "Text Color (If Custom)",
+    "label": "สีตัวอักษร",
     "value": "#393a6e",
     "group": "Theme Colors"
   },
   "avatarGlowColor": {
     "type": "colorpicker",
-    "label": "Avatar Glow Color (If Custom)",
+    "label": "สีแสงเรืองรอบรูปโปรไฟล์",
     "value": "#8e90f6",
     "group": "Theme Colors"
   },
   "cardIcon": {
     "type": "dropdown",
-    "label": "Title Header Icon",
+    "label": "ไอคอนหัวเรื่อง",
     "value": "Heart",
     "options": {
       "Heart": "Heart",
@@ -132,45 +132,45 @@
   },
   "avatarShape": {
     "type": "dropdown",
-    "label": "Avatar Frame Shape",
+    "label": "รูปทรงกรอบโปรไฟล์",
     "value": "circle",
     "options": {
-      "circle": "Circle",
-      "square": "Rounded Square"
+      "circle": "วงกลม",
+      "square": "สี่เหลี่ยมมน"
     },
     "group": "Layout & Appearance"
   },
   "stampShapePreset": {
     "type": "dropdown",
-    "label": "Stamp Slot Preset",
+    "label": "ลวดลายตราปั๊ม",
     "value": "paw",
     "options": {
-      "paw": "Cute Paw",
-      "bunny": "Cute Bunny",
-      "star": "Shining Star",
-      "heart": "Sweet Heart",
-      "circle": "Classic Circle",
-      "genetic": "Genetic Atom",
-      "penguin": "Cute Penguin",
-      "custom": "Custom Image Upload"
+      "paw": "อุ้งเท้า",
+      "bunny": "กระต่าย",
+      "star": "ดวงดาว",
+      "heart": "หัวใจ",
+      "circle": "วงกลม",
+      "genetic": "อะตอม",
+      "penguin": "เพนกวิน",
+      "custom": "อัปโหลดรูปภาพเอง"
     },
     "group": "Icons & Stamps"
   },
   "stampImage": {
     "type": "image-input",
-    "label": "Custom Stamp Image (If preset is Custom)",
+    "label": "รูปภาพตราปั๊มกำหนดเอง",
     "value": "",
     "group": "Icons & Stamps"
   },
   "rubberStampImage": {
     "type": "image-input",
-    "label": "Rubber Stamp Image (If preset is Custom)",
+    "label": "รูปภาพรอยประทับกำหนดเอง",
     "value": "",
     "group": "Icons & Stamps"
   },
   "cardCornerRadius": {
     "type": "slider",
-    "label": "Card Corner Radius (px)",
+    "label": "ความโค้งมนของขอบการ์ด",
     "value": 20,
     "min": 0,
     "max": 36,
@@ -185,17 +185,17 @@
   },
   "stampShape": {
     "type": "dropdown",
-    "label": "Stamp Slot Frame Shape",
+    "label": "รูปทรงช่องปั๊มแต้ม",
     "value": "circle",
     "options": {
-      "circle": "Circle",
-      "square": "Rounded Square"
+      "circle": "วงกลม",
+      "square": "สี่เหลี่ยมมน"
     },
     "group": "Layout & Appearance"
   },
   "overlayScale": {
     "type": "slider",
-    "label": "Overlay Size Scale (%)",
+    "label": "ขนาดการ์ดบนจอ",
     "value": 100,
     "min": 50,
     "max": 200,
@@ -204,36 +204,36 @@
   },
   "cardPosition": {
     "type": "dropdown",
-    "label": "Card Position",
+    "label": "ตำแหน่งแสดงผลบนหน้าจอ",
     "value": "bottom-left",
     "options": {
-      "bottom-left": "Bottom Left",
-      "bottom-right": "Bottom Right",
-      "top-left": "Top Left",
-      "top-right": "Top Right"
+      "bottom-left": "ล่างซ้าย",
+      "bottom-right": "ล่างขวา",
+      "top-left": "บนซ้าย",
+      "top-right": "บนขวา"
     },
     "group": "Layout & Appearance"
   },
   "animStyle": {
     "type": "dropdown",
-    "label": "Animation Style",
+    "label": "รูปแบบแอนิเมชัน",
     "value": "slide",
     "options": {
-      "slide": "Slide",
-      "fade": "Fade",
-      "bounce": "Bounce"
+      "slide": "เลื่อนเข้ามา",
+      "fade": "ค่อยๆ ปรากฏ",
+      "bounce": "เด้งขึ้นมา"
     },
     "group": "Layout & Appearance"
   },
   "soundUrl": {
     "type": "sound-input",
-    "label": "Check-in Sound Effect MP3",
+    "label": "ไฟล์เสียงเอฟเฟกต์เช็คอิน",
     "value": "",
     "group": "Audio Settings"
   },
   "soundVolume": {
     "type": "slider",
-    "label": "Audio Volume (%)",
+    "label": "ระดับเสียงเอฟเฟกต์",
     "value": 80,
     "min": 0,
     "max": 100,
@@ -242,7 +242,7 @@
   },
   "stampTotal": {
     "type": "slider",
-    "label": "Stamps per Round",
+    "label": "จำนวนแต้มสะสมต่อรอบ",
     "value": 10,
     "min": 1,
     "max": 25,
@@ -251,25 +251,25 @@
   },
   "cardWidth": {
     "type": "number",
-    "label": "Card Width (px)",
+    "label": "ความกว้างของการ์ด",
     "value": 440,
     "group": "Layout & Appearance"
   },
   "cardOffset": {
     "type": "number",
-    "label": "Screen Offset (px)",
+    "label": "ระยะห่างจากขอบจอ",
     "value": 36,
     "group": "Layout & Appearance"
   },
   "enableVisualOverlay": {
     "type": "checkbox",
-    "label": "แสดงผลการ์ดบนจอ OBS",
+    "label": "แสดงภาพบนหน้าจอสตรีม",
     "value": true,
     "group": "General Settings"
   },
   "displayDuration": {
     "type": "slider",
-    "label": "Display Duration (seconds)",
+    "label": "ระยะเวลาแสดงผลค้างไว้บนจอ (วินาที)",
     "value": 6,
     "min": 2,
     "max": 30,
@@ -278,25 +278,25 @@
   },
   "enableChatMsg": {
     "type": "checkbox",
-    "label": "ส่งข้อความยืนยันลงแชท Twitch",
+    "label": "ส่งผลลัพธ์ลงแชท Twitch",
     "value": true,
     "group": "Bot Chat Messages"
   },
   "enableChatCmd": {
     "type": "checkbox",
-    "label": "เปิดใช้งานคำสั่งแชท (Chat Command เช่น !loyalty)",
+    "label": "เปิดใช้งานคำสั่งในแชท Twitch",
     "value": true,
     "group": "Bot Chat Messages"
   },
   "chatCmdPrefix": {
     "type": "text",
-    "label": "Chat Command Keyword (!loyalty / !loyalty @user)",
+    "label": "คำสั่งเช็คอินในแชท",
     "value": "!loyalty",
     "group": "Bot Chat Messages"
   },
   "chatMsgTemplate": {
     "type": "text",
-    "label": "Chat Message Template ({user} = name, {count} = count)",
+    "label": "รูปแบบข้อความในแชท",
     "value": "{user} checked in {count} times!",
     "group": "Bot Chat Messages"
   }
