@@ -19,7 +19,7 @@
   },
   "widgetScale": {
     "type": "number",
-    "label": "ขนาดขยาย Overlay (%) (Scale)",
+    "label": "ขนาดขยาย Overlay",
     "value": 100,
     "group": "Custom Text & Avatar"
   },
@@ -67,19 +67,19 @@
   },
   "enableTextShadow": {
     "type": "checkbox",
-    "label": "เปิดเงาและขอบตัวอักษร (Text Shadow & Outline)",
+    "label": "เปิดเงาและขอบตัวอักษร",
     "value": true,
     "group": "Color Customization"
   },
   "enableSound": {
     "type": "checkbox",
-    "label": "เปิดเสียงเอฟเฟกต์ (Sound Effects)",
+    "label": "เปิดเสียงเอฟเฟกต์",
     "value": true,
     "group": "เสียงเอฟเฟกต์ (Sound Effects)"
   },
   "soundVolume": {
     "type": "slider",
-    "label": "ระดับเสียงเอฟเฟกต์ (Sound Volume %)",
+    "label": "ระดับเสียงเอฟเฟกต์",
     "value": 50,
     "min": 0,
     "max": 100,

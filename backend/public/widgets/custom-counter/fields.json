@@ -1,31 +1,31 @@
 {
   "counterTitle": {
     "type": "text",
-    "label": "ชื่อสถิติ (Counter Title)",
+    "label": "ชื่อสถิติ",
     "value": "ได้ออกประตู",
     "group": "ตั้งค่าทั่วไป (General)"
   },
   "currentCount": {
     "type": "number",
-    "label": "ตัวเลขปัจจุบัน (Current Count)",
+    "label": "ตัวเลขปัจจุบัน",
     "value": 0,
     "group": "ตั้งค่าทั่วไป (General)"
   },
   "unitText": {
     "type": "text",
-    "label": "หน่วยนับ (Unit / Suffix)",
+    "label": "หน่วยนับ",
     "value": "ครั้ง",
     "group": "ตั้งค่าทั่วไป (General)"
   },
   "stepAmount": {
     "type": "number",
-    "label": "จำนวนที่เพิ่ม/ลดต่อครั้ง (Step Amount)",
+    "label": "จำนวนที่เพิ่ม/ลดต่อครั้ง",
     "value": 1,
     "group": "ตั้งค่าทั่วไป (General)"
   },
   "themePreset": {
     "type": "dropdown",
-    "label": "สกินและธีมแสดงผล (Theme Preset)",
+    "label": "สกินและธีมแสดงผล",
     "value": "minimal-glass",
     "options": {
       "clean-hud": "Clean HUD",
@@ -40,7 +40,7 @@
   },
   "fontFamily": {
     "type": "dropdown",
-    "label": "ฟอนต์ตัวอักษร (Font Family)",
+    "label": "ฟอนต์ตัวอักษร",
     "value": "Prompt",
     "options": {
       "Prompt": "Prompt",
@@ -57,7 +57,7 @@
   },
   "iconPreset": {
     "type": "dropdown",
-    "label": "ไอคอนกำกับสถิติ (Icon Preset)",
+    "label": "ไอคอนกำกับสถิติ",
     "value": "ghost",
     "options": {
       "ghost": "Ghost",
@@ -84,79 +84,97 @@
   },
   "accentColor": {
     "type": "colorpicker",
-    "label": "สีเน้นหลัก (Accent Color)",
+    "label": "สีเน้นหลัก",
     "value": "#f59e0b",
     "group": "รูปแบบและการแสดงผล (Design & Styles)"
   },
   "borderColor": {
     "type": "colorpicker",
-    "label": "สีกรอบ (Border Color)",
+    "label": "สีกรอบ",
     "value": "#f59e0b",
     "group": "รูปแบบและการแสดงผล (Design & Styles)",
-    "showIf": { "themePreset": ["minimal-clean", "minimal-glass", "cyberpunk", "souls", "arcade", "mecha-hud"] }
+    "showIf": {
+      "themePreset": [
+        "minimal-clean",
+        "minimal-glass",
+        "cyberpunk",
+        "souls",
+        "arcade",
+        "mecha-hud"
+      ]
+    }
   },
   "badgeBgColor": {
     "type": "colorpicker",
-    "label": "สีพื้นหลังการ์ด (Background Color)",
+    "label": "สีพื้นหลังการ์ด",
     "value": "#0f172a",
     "group": "รูปแบบและการแสดงผล (Design & Styles)",
-    "showIf": { "themePreset": ["minimal-clean", "minimal-glass", "cyberpunk", "souls", "arcade", "mecha-hud"] }
+    "showIf": {
+      "themePreset": [
+        "minimal-clean",
+        "minimal-glass",
+        "cyberpunk",
+        "souls",
+        "arcade",
+        "mecha-hud"
+      ]
+    }
   },
   "textColor": {
     "type": "colorpicker",
-    "label": "สีข้อความ (Text Color)",
+    "label": "สีข้อความ",
     "value": "#ffffff",
     "group": "รูปแบบและการแสดงผล (Design & Styles)"
   },
   "counterScale": {
     "type": "number",
-    "label": "ขนาดขยาย Overlay (%)",
+    "label": "ขนาดขยาย Overlay",
     "value": 100,
     "group": "รูปแบบและการแสดงผล (Design & Styles)"
   },
   "soundEnabled": {
     "type": "checkbox",
-    "label": "เปิดเสียงเอฟเฟกต์เมื่อตัวเลขเปลี่ยน (Play sound on count)",
+    "label": "เปิดเสียงเอฟเฟกต์เมื่อตัวเลขเปลี่ยน",
     "value": true,
     "group": "เสียงเอฟเฟกต์ (Audio)"
   },
   "soundVolume": {
     "type": "number",
-    "label": "ระดับเสียง (0 - 100)",
+    "label": "ระดับเสียง",
     "value": 70,
     "group": "เสียงเอฟเฟกต์ (Audio)"
   },
   "customSoundUrl": {
     "type": "text",
-    "label": "ลิงก์ไฟล์เสียงกำหนดเอง (MP3 / WAV URL)",
+    "label": "ลิงก์ไฟล์เสียงกำหนดเอง",
     "value": "",
     "group": "เสียงเอฟเฟกต์ (Audio)"
   },
   "enableChatCmd": {
     "type": "checkbox",
-    "label": "เปิดรับคำสั่งผ่าน Twitch Chat (Enable Chat Commands)",
+    "label": "เปิดรับคำสั่งผ่าน Twitch Chat",
     "value": true,
     "group": "Twitch Chat Commands"
   },
   "commandPrefix": {
     "type": "text",
-    "label": "คำสั่งแชทหลัก (Command Prefix)",
+    "label": "คำสั่งแชทหลัก",
     "value": "!count",
     "group": "Twitch Chat Commands"
   },
   "chatPermission": {
     "type": "dropdown",
-    "label": "ผู้มีสิทธิ์ใช้คำสั่งปรับค่า (Chat Permission)",
+    "label": "ผู้มีสิทธิ์ใช้คำสั่งปรับค่า",
     "value": "mods",
     "options": {
-      "mods": "สตรีมเมอร์และม็อดเท่านั้น (Broadcaster & Mods)",
-      "everyone": "ทุกคนในแชท (Everyone)"
+      "mods": "สตรีมเมอร์และม็อดเท่านั้น",
+      "everyone": "ทุกคนในแชท"
     },
     "group": "Twitch Chat Commands"
   },
   "enableChatReply": {
     "type": "checkbox",
-    "label": "ให้บอทส่งข้อความสรุปแต้มลงในแชท (Send Chat Reply)",
+    "label": "ให้บอทส่งข้อความสรุปแต้มลงในแชท",
     "value": true,
     "group": "Twitch Chat Commands"
   },

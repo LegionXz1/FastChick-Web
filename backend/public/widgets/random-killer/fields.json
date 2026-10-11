@@ -1,67 +1,67 @@
 {
   "rewardName": {
     "type": "text",
-    "label": "ชื่อรางวัล Channel Points (Reward Name)",
+    "label": "ชื่อรางวัล Channel Points",
     "value": "Random Killer",
     "group": "Twitch & Bot Settings"
   },
   "enableChat": {
     "type": "checkbox",
-    "label": "ส่งผลลัพธ์ลงแชท Twitch (Send result to Twitch chat)",
+    "label": "ส่งผลลัพธ์ลงแชท Twitch",
     "value": true,
     "group": "Twitch & Bot Settings"
   },
   "chatTemplate": {
     "type": "text",
-    "label": "ข้อความส่งลงแชท (Twitch Chat Template)",
+    "label": "ข้อความส่งลงแชท",
     "value": "[Roll] {username} rolled -> {killer}",
     "group": "Twitch & Bot Settings"
   },
   "enableVisualOverlay": {
     "type": "checkbox",
-    "label": "แสดงกราฟิก Pop-up บนจอ OBS (Show Visual Overlay on Stream)",
+    "label": "แสดงกราฟิก Pop-up บนจอ OBS",
     "value": true,
     "group": "Display Settings (สไตล์และการแสดงผล)"
   },
   "showHeader": {
     "type": "checkbox",
-    "label": "แสดงส่วนหัว (Show Header Title)",
+    "label": "แสดงส่วนหัว",
     "value": true,
     "group": "Display Settings (สไตล์และการแสดงผล)"
   },
   "showTargetUser": {
     "type": "checkbox",
-    "label": "แสดงชื่อผู้ชมที่แลกแต้ม (Show Target / Username)",
+    "label": "แสดงชื่อผู้ชมที่แลกแต้ม",
     "value": true,
     "group": "Display Settings (สไตล์และการแสดงผล)"
   },
   "showDividerText": {
     "type": "checkbox",
-    "label": "แสดงข้อความคั่น (Show Divider Text)",
+    "label": "แสดงข้อความคั่น",
     "value": true,
     "group": "Display Settings (สไตล์และการแสดงผล)"
   },
   "showKillerName": {
     "type": "checkbox",
-    "label": "แสดงชื่อคิลเลอร์ (Show Killer Name)",
+    "label": "แสดงชื่อคิลเลอร์",
     "value": true,
     "group": "Display Settings (สไตล์และการแสดงผล)"
   },
   "showSubtitle": {
     "type": "checkbox",
-    "label": "แสดงข้อความสถานะย่อย (Show Subtitle)",
+    "label": "แสดงข้อความสถานะย่อย",
     "value": true,
     "group": "Display Settings (สไตล์และการแสดงผล)"
   },
   "showScanEffects": {
     "type": "checkbox",
-    "label": "แสดงเส้นเลเซอร์และขอบมุมสแกน (Show Scanline & Corner Brackets)",
+    "label": "แสดงเส้นเลเซอร์และขอบมุมสแกน",
     "value": true,
     "group": "Display Settings (สไตล์และการแสดงผล)"
   },
   "photoSize": {
     "type": "slider",
-    "label": "ขนาดรูปภาพคิลเลอร์ (Photo Size px)",
+    "label": "ขนาดรูปภาพคิลเลอร์",
     "value": 480,
     "min": 180,
     "max": 900,
@@ -70,25 +70,25 @@
   },
   "headerText": {
     "type": "text",
-    "label": "ข้อความส่วนหัว (Header Title)",
+    "label": "ข้อความส่วนหัว",
     "value": "Killer Roulette",
     "group": "Texts"
   },
   "dividerText": {
     "type": "text",
-    "label": "ข้อความคั่น (Divider Text)",
+    "label": "ข้อความคั่น",
     "value": "The Entity Chooses",
     "group": "Texts"
   },
   "spinSubtitle": {
     "type": "text",
-    "label": "ข้อความขณะกำลังสุ่ม (Searching Subtitle)",
+    "label": "ข้อความขณะกำลังสุ่ม",
     "value": "analyzing biological threat",
     "group": "Texts"
   },
   "chosenSubtitle": {
     "type": "text",
-    "label": "ข้อความเมื่อสุ่มเสร็จ (Revealed Subtitle)",
+    "label": "ข้อความเมื่อสุ่มเสร็จ",
     "value": "SUBJECT IDENTIFIED",
     "group": "Texts"
   },
@@ -238,13 +238,13 @@
   },
   "excludedKillers": {
     "type": "custom",
-    "label": "คิลเลอร์ที่ไม่ต้องการให้สุ่ม (Excluded Killers)",
+    "label": "คิลเลอร์ที่ไม่ต้องการให้สุ่ม",
     "value": [],
     "group": "Excluded Killers"
   },
   "soundVolume": {
     "type": "slider",
-    "label": "ระดับเสียงเอฟเฟกต์ (Sound Volume %)",
+    "label": "ระดับเสียงเอฟเฟกต์",
     "value": 60,
     "min": 0,
     "max": 100,

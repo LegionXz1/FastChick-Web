@@ -1,7 +1,7 @@
 {
   "theme": {
     "type": "dropdown",
-    "label": "ธีมการแสดงผล",
+    "label": "รูปแบบการ์ดเพลง",
     "value": "glassmorphism",
     "options": {
       "glassmorphism": "Glassmorphism",
@@ -14,43 +14,43 @@
   },
   "accentColor": {
     "type": "colorpicker",
-    "label": "สีหลักของ Widget (Accent Color)",
+    "label": "โทนสีหลัก",
     "value": "#1DB954",
     "group": "Appearance"
   },
   "showVisualizer": {
     "type": "checkbox",
-    "label": "แสดงกราฟคลื่นเสียงดนตรี (Animated Equalizer)",
+    "label": "แถบคลื่นเสียงดนตรีขยับตามเพลง",
     "value": true,
     "group": "Appearance"
   },
   "showProgressBar": {
     "type": "checkbox",
-    "label": "แสดงหลอดเวลาเพลง (Progress Bar)",
+    "label": "แถบความยาวเพลง",
     "value": true,
     "group": "Appearance"
   },
   "showRequester": {
     "type": "checkbox",
-    "label": "แสดงชื่อผู้ขอเพลงบนจอ (Show Requester Name)",
+    "label": "แสดงชื่อคนขอเพลง",
     "value": true,
     "group": "Appearance"
   },
   "commandPrefix": {
     "type": "text",
-    "label": "คำสั่งขอเพลงในแชท (Chat Command Prefix)",
+    "label": "คำสั่งขอเพลงในแชท",
     "value": "!sr",
     "group": "Song Request Settings"
   },
   "channelPointsReward": {
     "type": "text",
-    "label": "ชื่อรางวัลแต้มช่องสำหรับขอเพลง (Channel Points Reward)",
+    "label": "ชื่อแต้มช่อง Twitch สำหรับขอเพลง",
     "value": "ขอเพลง",
     "group": "Song Request Settings"
   },
   "maxDuration": {
     "type": "slider",
-    "label": "ความยาวเพลงสูงสุดที่อนุญาต (นาที)",
+    "label": "จำกัดความยาวเพลงไม่เกิน (นาที)",
     "value": 7,
     "min": 2,
     "max": 20,
@@ -59,7 +59,7 @@
   },
   "userCooldown": {
     "type": "slider",
-    "label": "คูลดาวน์ต่อผู้ใช้ (วินาที)",
+    "label": "ระยะเวลารอระหว่างขอเพลง (วินาที)",
     "value": 60,
     "min": 0,
     "max": 600,
@@ -68,11 +68,11 @@
   },
   "idleBehavior": {
     "type": "dropdown",
-    "label": "เมื่อไม่มีเพลงเล่น (Idle State)",
+    "label": "ตอนที่ไม่มีเพลงเล่น",
     "value": "idle_card",
     "options": {
-      "idle_card": "แสดงกล่องสแตนด์บายพร้อมคำสั่งขอเพลง",
-      "hide": "ซ่อน Widget อัตโนมัติ (Fade Out)"
+      "idle_card": "แสดงกล่องข้อความบอกวิธีขอเพลง",
+      "hide": "ซ่อนการ์ดเพลงอัตโนมัติ"
     },
     "group": "Behavior"
   }

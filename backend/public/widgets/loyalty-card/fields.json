@@ -1,7 +1,7 @@
 {
   "triggerChannelPoints": {
     "type": "checkbox",
-    "label": "เปิดใช้งานการเช็คอินด้วยแต้มช่อง (Twitch Channel Points Trigger)",
+    "label": "เปิดใช้งานการเช็คอินด้วยแต้มช่อง",
     "value": true,
     "group": "Twitch Triggers"
   },
@@ -53,7 +53,7 @@
   },
   "showRemainingNote": {
     "type": "checkbox",
-    "label": "แสดงข้อความบอกจำนวนแต้มที่เหลือ (Show Remaining Note)",
+    "label": "แสดงข้อความบอกจำนวนแต้มที่เหลือ",
     "value": true,
     "group": "Typography"
   },
@@ -179,7 +179,7 @@
   },
   "showSpirals": {
     "type": "checkbox",
-    "label": "แสดงห่วงสมุดโน้ตด้านบน (Show Spiral Rings)",
+    "label": "แสดงห่วงสมุดโน้ตด้านบน",
     "value": true,
     "group": "Layout & Appearance"
   },
@@ -263,7 +263,7 @@
   },
   "enableVisualOverlay": {
     "type": "checkbox",
-    "label": "แสดงผลการ์ดบนจอ OBS (Show Visual Overlay on Stream)",
+    "label": "แสดงผลการ์ดบนจอ OBS",
     "value": true,
     "group": "General Settings"
   },
@@ -278,7 +278,7 @@
   },
   "enableChatMsg": {
     "type": "checkbox",
-    "label": "ส่งข้อความยืนยันลงแชท Twitch (Send Chat Confirmation Message)",
+    "label": "ส่งข้อความยืนยันลงแชท Twitch",
     "value": true,
     "group": "Bot Chat Messages"
   },

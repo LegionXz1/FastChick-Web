@@ -1519,7 +1519,7 @@ export default function SecretSettings() {
             <p style={{ margin: '4px 0 0', fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
               {spotifyStatus.connected
                 ? `บัญชี Spotify: ${spotifyStatus.displayName || 'กำลังใช้งาน'} ${spotifyStatus.product ? `(${spotifyStatus.product})` : ''}`
-                : 'เชื่อมต่อกับบัญชี Spotify ของคุณเพื่อให้ผู้ชมสามารถพิมพ์ !sr ในแชท Twitch ได้ทันที'}
+                : 'เชื่อมต่อ Spotify เพื่อเปิดให้คนดูในสตรีมพิมพ์ขอเพลงผ่านแชท หรือแลกแต้มช่องได้'}
             </p>
           </div>
         </div>
@@ -2063,7 +2063,7 @@ export default function SecretSettings() {
                   <div className="setting-card">
                     <div className="setting-card-header">
                       <div>
-                        <h4 className="setting-card-title">ทดสอบการทำงานและสุ่มผลลัพธ์ (Quick Actions & Test Roll)</h4>
+                        <h4 className="setting-card-title">ทดสอบการทำงานและสุ่มผลลัพธ์</h4>
                         <p className="setting-card-desc">คลิกปุ่มเพื่อทดสอบให้กราฟิกแสดงผลขึ้นบน OBS หรือ Live Preview ทันที</p>
                       </div>
                     </div>
@@ -2346,7 +2346,7 @@ export default function SecretSettings() {
                 {/* Theme Presets */}
                 {(schema?.themePreset || schema?.theme) && (
                   <div className="setting-card">
-                    <h4 className="setting-card-title">สกินและธีมการแสดงผล (Theme Presets)</h4>
+                    <h4 className="setting-card-title">สกินและธีมการแสดงผล</h4>
                     <p className="setting-card-desc">คลิกเลือกธีมที่เข้ากับสไตล์การสตรีมของคุณ</p>
                     <div className="preset-grid">
                       {Object.entries((schema.themePreset || schema.theme).options || {}).map(([val, label]) => {
@@ -2382,7 +2382,7 @@ export default function SecretSettings() {
                     <div className="setting-card">
                       <div className="setting-card-header">
                         <div>
-                          <h4 className="setting-card-title">{field.label || 'ขนาดกราฟิก (Size / Scale)'}</h4>
+                          <h4 className="setting-card-title">{field.label || 'ขนาดกราฟิก'}</h4>
                           <p className="setting-card-desc">ปรับขนาดการแสดงผลให้พอดีกับจอเกมของคุณ</p>
                         </div>
                         <div className="slider-presets-row">
@@ -2427,7 +2427,7 @@ export default function SecretSettings() {
 
                 {/* Color Swatches Grid */}
                 <div className="setting-card">
-                  <h4 className="setting-card-title">สีและแสงออร่า (Color Palette)</h4>
+                  <h4 className="setting-card-title">สีและแสงออร่า</h4>
                   <p className="setting-card-desc">ปรับแต่งโทนสีของข้อความและเส้นขอบ</p>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginTop: '0.85rem' }}>
@@ -2453,7 +2453,7 @@ export default function SecretSettings() {
 
                 {/* Display Toggles */}
                 <div className="setting-card">
-                  <h4 className="setting-card-title">การแสดงองค์ประกอบบนหน้าจอ (Display Components)</h4>
+                  <h4 className="setting-card-title">การแสดงองค์ประกอบบนหน้าจอ</h4>
                   <p className="setting-card-desc">เปิดหรือปิดเฉพาะส่วนที่ต้องการให้แสดง</p>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '0.85rem' }}>
@@ -2520,7 +2520,7 @@ export default function SecretSettings() {
                 {/* Triggers & Chat Switches */}
                 {Object.entries(schema || {}).filter(([k, f]) => f.type === 'checkbox' && (k.toLowerCase().includes('chat') || k.toLowerCase().includes('channelpoints') || k.toLowerCase().includes('trigger')) && isFieldMatching(k, f)).length > 0 && (
                   <div className="setting-card">
-                    <h4 className="setting-card-title">การเปิดใช้งานในแชทและแต้มช่อง (Triggers & Commands)</h4>
+                    <h4 className="setting-card-title">การเปิดใช้งานในแชทและแต้มช่อง</h4>
                     <p className="setting-card-desc">เลือกเปิดหรือปิดระบบการตอบสนองต่อผู้ชม</p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '0.85rem' }}>
                       {Object.entries(schema || {}).filter(([k, f]) => f.type === 'checkbox' && (k.toLowerCase().includes('chat') || k.toLowerCase().includes('channelpoints') || k.toLowerCase().includes('trigger')) && isFieldMatching(k, f)).map(([key, field]) => (
@@ -2542,7 +2542,7 @@ export default function SecretSettings() {
                 {/* Chat Template */}
                 {(schema?.chatTemplate || schema?.chatMsgTemplate) && (
                   <div className="setting-card">
-                    <h4 className="setting-card-title">ข้อความที่บอทจะพิมพ์ตอบกลับในแชท (Chat Template)</h4>
+                    <h4 className="setting-card-title">ข้อความที่บอทจะพิมพ์ตอบกลับในแชท</h4>
                     <p className="setting-card-desc">ใช้ตัวแปรในวงเล็บปีกกาเพื่อแทนที่ค่าที่สุ่มหรือเช็คอินได้</p>
                     <div style={{ marginTop: '0.65rem' }}>
                       <input
@@ -2887,7 +2887,7 @@ export default function SecretSettings() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <Volume2 size={18} style={{ color: '#1DB954' }} />
                           <h4 style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 700 }}>
-                            กำลังเล่นอยู่ (Now Playing)
+                            เพลงที่กำลังเล่นอยู่
                           </h4>
                         </div>
                         {nowPlaying?.track && (
@@ -2899,7 +2899,7 @@ export default function SecretSettings() {
                             title="ข้ามไปเพลงถัดไปบน Spotify"
                           >
                             <SkipForward size={14} />
-                            <span>ข้ามเพลง (Skip)</span>
+                            <span>ข้ามเพลง</span>
                           </button>
                         )}
                       </div>
@@ -2977,7 +2977,7 @@ export default function SecretSettings() {
                             ไม่มีเพลงที่กำลังเล่นอยู่ในขณะนี้
                           </p>
                           <p style={{ margin: '4px 0 0', fontSize: '0.76rem' }}>
-                            เปิด Spotify บนคอมของคุณแล้วกดเล่นเพลง หรือรอผู้ชมขอเพลงผ่านคำสั่ง <code>!sr &lt;ชื่อเพลง&gt;</code> ในแชท
+                            เปิดแอป Spotify บนคอมแล้วกดเปิดเพลงไว้ หรือรอคนดูพิมพ์ขอเพลงในแชท
                           </p>
                         </div>
                       )}
@@ -2989,7 +2989,7 @@ export default function SecretSettings() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                           <Search size={16} style={{ color: 'var(--text-secondary)' }} />
                           <h4 style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 700 }}>
-                            เพิ่มเพลงเข้าคิวเอง (Manual Song Request)
+                            เลือกเพลงเปิดเอง
                           </h4>
                         </div>
                         <form onSubmit={handleManualSongRequest} style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -2997,7 +2997,7 @@ export default function SecretSettings() {
                             type="text"
                             value={srSearchQuery}
                             onChange={(e) => setSrSearchQuery(e.target.value)}
-                            placeholder="พิมพ์ชื่อเพลง, ศิลปิน หรือวางลิงก์ Spotify..."
+                            placeholder="พิมพ์ชื่อเพลง, ชื่อศิลปิน หรือวางลิงก์จาก Spotify..."
                             style={{
                               flex: 1,
                               minWidth: '200px',
@@ -3120,7 +3120,7 @@ export default function SecretSettings() {
                 {/* 3. Custom Counter Live Stepper Card */}
                 {selectedWidget === 'custom-counter' && (
                   <div className="setting-card">
-                    <h4 className="setting-card-title">แผงควบคุมยอดสถิติ Real-Time (Live Counter Pad)</h4>
+                    <h4 className="setting-card-title">แผงควบคุมยอดสถิติ Real-Time</h4>
                     <p className="setting-card-desc">คลิกเพื่อเพิ่มลดคะแนน หรือทดสอบขึ้นจอ OBS ทันที</p>
 
                     <div style={{
@@ -3211,7 +3211,7 @@ export default function SecretSettings() {
                   <div className="setting-card">
                     <div className="setting-card-header">
                       <div>
-                        <h4 className="setting-card-title">คัดกรองเปิร์ค DBD ที่ไม่ต้องการให้สุ่ม (Perk Blacklist)</h4>
+                        <h4 className="setting-card-title">คัดกรองเปิร์ค DBD ที่ไม่ต้องการให้สุ่ม</h4>
                         <p className="setting-card-desc">คลิกที่เปิร์คเพื่อสลับระหว่าง "สุ่มได้" กับ "คัดออก"</p>
                       </div>
                       <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
@@ -3330,7 +3330,7 @@ export default function SecretSettings() {
                 {/* 5. Random Killer Blacklist */}
                 {selectedWidget === 'random-killer' && (
                   <div className="setting-card">
-                    <h4 className="setting-card-title">คัดกรองฆาตกรที่ไม่ต้องการให้สุ่ม (Killer Blacklist)</h4>
+                    <h4 className="setting-card-title">คัดกรองฆาตกรที่ไม่ต้องการให้สุ่ม</h4>
                     <p className="setting-card-desc">คลิกที่ภาพคิลเลอร์เพื่อเปิด/ปิดการสุ่ม</p>
 
                     <div style={{
@@ -3385,7 +3385,7 @@ export default function SecretSettings() {
                   <div className="setting-card">
                     <div className="setting-card-header">
                       <div>
-                        <h4 className="setting-card-title">คัดกรองตัวละคร Valorant (Agent Blacklist)</h4>
+                        <h4 className="setting-card-title">คัดกรองตัวละคร Valorant</h4>
                         <p className="setting-card-desc">คลิกที่ตัวละครเพื่อเปิด/ปิดการสุ่ม</p>
                       </div>
                       <button
@@ -3466,7 +3466,7 @@ export default function SecretSettings() {
                     onClick={() => handleFieldChange('enableSound', !fieldData.enableSound)}
                   >
                     <div className="switch-card-info">
-                      <span className="switch-card-label">{schema.enableSound.label || 'เปิดเสียงเอฟเฟกต์ (Sound Effects)'}</span>
+                      <span className="switch-card-label">{schema.enableSound.label || 'เปิดเสียงเอฟเฟกต์'}</span>
                       <span className="switch-card-desc">เปิดหรือปิดเสียงเอฟเฟกต์ทั้งหมดของ Widget นี้</span>
                     </div>
                     <div className={`switch-pill ${fieldData.enableSound ? 'is-on' : ''}`}>
@@ -3479,7 +3479,7 @@ export default function SecretSettings() {
                 <div className="setting-card">
                   <div className="setting-card-header">
                     <div>
-                      <h4 className="setting-card-title">ระดับความดังเสียงเอฟเฟกต์ (SFX Volume)</h4>
+                      <h4 className="setting-card-title">ระดับความดังเสียงเอฟเฟกต์</h4>
                       <p className="setting-card-desc">ปรับความดังเสียงเตือนเมื่อมีการสุ่มหรือทำรายการ</p>
                     </div>
                     <button
@@ -3982,7 +3982,7 @@ export default function SecretSettings() {
             {activeCategory === 'all' && (
               <div className="animate-fade-up">
                 <div className="setting-card" style={{ marginBottom: '1rem', borderLeft: '4px solid var(--accent-color)' }}>
-                  <h4 className="setting-card-title">การตั้งค่าทั้งหมด (Full Schema Editor)</h4>
+                  <h4 className="setting-card-title">การตั้งค่าทั้งหมด</h4>
                   <p className="setting-card-desc">
                     เข้าถึงทุกตัวเลือกการตั้งค่าของ Widget นี้โดยตรง พร้อมการตรวจสอบเงื่อนไขการแสดงผล (showIf) แบบไดนามิก
                   </p>

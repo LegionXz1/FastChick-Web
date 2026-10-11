@@ -1,20 +1,20 @@
 {
   "mode": {
     "type": "dropdown",
-    "label": "โหมดการสุ่มเริ่มต้น (Default Roll Mode)",
+    "label": "โหมดการสุ่มเริ่มต้น",
     "value": "single",
     "options": {
-      "single": "สุ่มเดี่ยว 1 ตัว (Single Agent)",
-      "team": "สุ่มฟูลทีม 5 คน (Team Composition)"
+      "single": "สุ่มเดี่ยว 1 ตัว",
+      "team": "สุ่มฟูลทีม 5 คน"
     },
     "group": "Game Settings"
   },
   "roleFilter": {
     "type": "dropdown",
-    "label": "จำกัดตำแหน่งที่สุ่ม (Role Restriction)",
+    "label": "จำกัดตำแหน่งที่สุ่ม",
     "value": "all",
     "options": {
-      "all": "สุ่มได้ทุกตำแหน่ง (All Roles)",
+      "all": "สุ่มได้ทุกตำแหน่ง",
       "duelist": "เฉพาะ Duelist (สายเข้าทำ)",
       "initiator": "เฉพาะ Initiator (สายเปิดข้อมูล)",
       "controller": "เฉพาะ Controller (สายวางควัน)",
@@ -33,31 +33,31 @@
   },
   "showRoleBadge": {
     "type": "checkbox",
-    "label": "แสดงสัญลักษณ์และชื่อตำแหน่ง (Show Role Badge)",
+    "label": "แสดงสัญลักษณ์และชื่อตำแหน่ง",
     "value": true,
     "group": "Display Settings"
   },
   "showAbilities": {
     "type": "checkbox",
-    "label": "แสดงไอคอนสกิลประจำตัว 4 สกิล (Show Abilities Icons)",
+    "label": "แสดงไอคอนสกิลประจำตัว 4 สกิล",
     "value": true,
     "group": "Display Settings"
   },
   "showRequester": {
     "type": "checkbox",
-    "label": "แสดงแถบชื่อผู้ขอ / ผู้แลกแต้ม (Show Requester Badge)",
+    "label": "แสดงแถบชื่อผู้ขอ / ผู้แลกแต้ม",
     "value": true,
     "group": "Display Settings"
   },
   "enableSound": {
     "type": "checkbox",
-    "label": "เปิดเสียงเอฟเฟกต์ SFX (Enable Sound Effects)",
+    "label": "เปิดเสียงเอฟเฟกต์ SFX",
     "value": true,
     "group": "Audio Settings"
   },
   "soundVolume": {
     "type": "slider",
-    "label": "ระดับความดังเสียง SFX (%)",
+    "label": "ระดับความดังเสียง SFX",
     "value": 40,
     "min": 0,
     "max": 100,
@@ -66,7 +66,7 @@
   },
   "rewardName": {
     "type": "text",
-    "label": "ชื่อรางวัล Channel Points ใน Twitch (Twitch Reward Name)",
+    "label": "ชื่อรางวัล Channel Points ใน Twitch",
     "value": "สุ่มตัวละคร Valorant",
     "group": "Twitch Integration"
   },
@@ -84,7 +84,7 @@
   },
   "chatTemplate": {
     "type": "text",
-    "label": "รูปแบบข้อความตอบกลับในแชท (Chat Reply Template)",
+    "label": "รูปแบบข้อความตอบกลับในแชท",
     "value": "[Valorant] @{username} สุ่มได้ตัวละคร: {agent} ({role})!",
     "group": "Twitch Integration"
   }
