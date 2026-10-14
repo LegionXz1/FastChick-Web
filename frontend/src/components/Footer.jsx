@@ -15,7 +15,7 @@ export default function Footer() {
           <div className="footer-col brand-col">
             <Link to="/" className="footer-brand-logo" onClick={handleLinkClick}>
               <img
-                src="/electric-chicken.webp"
+                src="/electric-chicken.webp?v=4"
                 alt="FASTCHICK Mascot"
                 className="footer-mascot-img"
                 width="28"

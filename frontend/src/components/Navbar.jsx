@@ -66,7 +66,7 @@ export default function Navbar() {
         <div className="navbar-brand-group">
           <Link to="/" className="navbar-logo cursor-target" data-cursor-label="FASTCHICK" onClick={() => setIsMobileMenuOpen(false)}>
             <img
-              src="/electric-chicken.webp"
+              src="/electric-chicken.webp?v=4"
               alt="FASTCHICK Mascot"
               className="navbar-mascot-img"
               style={{

@@ -708,7 +708,7 @@ export default function Dock() {
       <div className="dock-header">
         <div className="dock-brand">
           <img
-            src="/electric-chicken.webp"
+            src="/electric-chicken.webp?v=4"
             alt="FASTCHICK"
             style={{
               width: '18px',
