@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
-import ThemeToggle from '../components/ThemeToggle';
 import UpdateModal from '../components/UpdateModal';
 import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';

@@ -85,16 +85,6 @@ export default function Footer() {
                   เข้าสู่ระบบด้วย Twitch
                 </a>
               </li>
-              <li>
-                <a
-                  href="https://obsproject.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="footer-link"
-                >
-                  OBS Studio Official
-                </a>
-              </li>
             </ul>
           </div>
         </div>

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Landing from './pages/Landing';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import TargetCursor from './components/TargetCursor';
 import ErrorBoundary from './components/ErrorBoundary';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
@@ -66,6 +67,20 @@ function AppContent() {
 
   return (
     <>
+      <TargetCursor
+        targetSelector=".cursor-target, .navbar-link, .navbar-logo, .navbar-user-trigger, .navbar-login-cta, .btn-island, .service-tab-btn, .hero-update-badge-btn"
+        spinDuration={0}
+        hideDefaultCursor={false}
+        parallaxOn
+        hoverDuration={0.16}
+        cursorColor="#ffffff"
+        cursorColorOnTarget="#ffffff"
+        dotSize={0}
+        showLabel
+        clickEffect
+        blendMode="normal"
+        onlyOnTarget
+      />
       <Navbar />
       <main className="app-layout-content">
         <ErrorBoundary>

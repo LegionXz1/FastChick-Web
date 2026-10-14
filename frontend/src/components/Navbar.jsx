@@ -14,7 +14,7 @@ import {
   ExternalLink,
   ChevronDown
 } from 'lucide-react';
-import ThemeToggle from './ThemeToggle';
+import SplitFlapText from './SplitFlapText';
 import { useAuth } from '../context/AuthContext';
 import { API_BASE } from '../config';
 
@@ -64,7 +64,7 @@ export default function Navbar() {
       <div className="global-navbar">
         {/* Brand */}
         <div className="navbar-brand-group">
-          <Link to="/" className="navbar-logo" onClick={() => setIsMobileMenuOpen(false)}>
+          <Link to="/" className="navbar-logo cursor-target" data-cursor-label="FASTCHICK" onClick={() => setIsMobileMenuOpen(false)}>
             <img
               src="/electric-chicken.webp"
               alt="FASTCHICK Mascot"
@@ -76,8 +76,21 @@ export default function Navbar() {
                 filter: 'drop-shadow(0 2px 5px rgba(245, 158, 11, 0.35))'
               }}
             />
-            <span className="navbar-logo-text">FASTCHICK</span>
-            <span className="navbar-logo-badge">by LegionX</span>
+            <SplitFlapText
+              words={['FASTCHICK', 'ByLegionX']}
+              flipDuration={0.12}
+              stagger={0.06}
+              cycleDelay={2400}
+              charset="alphanumeric"
+              flipsPerChar={8}
+              tileColor="#121215"
+              textColor="#f8fafc"
+              tileRadius={8}
+              gap={6}
+              fontSize={52}
+              loop
+              className="navbar-brand-split-flap"
+            />
           </Link>
 
           {/* Desktop Navigation Links */}
@@ -89,7 +102,8 @@ export default function Navbar() {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`navbar-link ${active ? 'active' : ''}`}
+                  className={`navbar-link cursor-target ${active ? 'active' : ''}`}
+                  data-cursor-label={item.label}
                 >
                   <Icon size={14} />
                   <span>{item.label}</span>
@@ -99,15 +113,14 @@ export default function Navbar() {
           </nav>
         </div>
 
-        {/* Right Section: ThemeToggle & Compact User Dropdown / Login */}
+        {/* Right Section: Compact User Dropdown / Login */}
         <div className="navbar-actions-group">
-          <ThemeToggle />
-
           {loading ? null : user ? (
             <div className="navbar-user-dropdown-container" ref={userDropdownRef}>
               <button
                 type="button"
-                className={`navbar-user-trigger ${isUserDropdownOpen ? 'active' : ''}`}
+                className={`navbar-user-trigger cursor-target ${isUserDropdownOpen ? 'active' : ''}`}
+                data-cursor-label="Account"
                 onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
                 aria-expanded={isUserDropdownOpen}
                 aria-haspopup="true"
@@ -158,7 +171,8 @@ export default function Navbar() {
                   <div className="navbar-dropdown-items">
                     <Link
                       to="/dashboard"
-                      className={`navbar-dropdown-item ${location.pathname === '/dashboard' ? 'active' : ''}`}
+                      className={`navbar-dropdown-item cursor-target ${location.pathname === '/dashboard' ? 'active' : ''}`}
+                      data-cursor-label="Dashboard"
                       onClick={() => setIsUserDropdownOpen(false)}
                       role="menuitem"
                     >
@@ -169,7 +183,8 @@ export default function Navbar() {
                     {user.isAdmin && (
                       <Link
                         to="/admin"
-                        className={`navbar-dropdown-item admin-item ${location.pathname.startsWith('/admin') ? 'active' : ''}`}
+                        className={`navbar-dropdown-item admin-item cursor-target ${location.pathname.startsWith('/admin') ? 'active' : ''}`}
+                        data-cursor-label="Admin"
                         onClick={() => setIsUserDropdownOpen(false)}
                         role="menuitem"
                       >
@@ -189,7 +204,8 @@ export default function Navbar() {
                         setIsUserDropdownOpen(false);
                         handleLogout();
                       }}
-                      className="navbar-dropdown-logout-btn"
+                      className="navbar-dropdown-logout-btn cursor-target"
+                      data-cursor-label="Logout"
                       role="menuitem"
                     >
                       <LogOut size={14} />
@@ -203,7 +219,8 @@ export default function Navbar() {
             <button
               type="button"
               onClick={handleLogin}
-              className="btn-island accent navbar-login-cta"
+              className="btn-island accent navbar-login-cta cursor-target"
+              data-cursor-label="Login"
             >
               <LogIn size={14} />
               <span>เริ่มต้นใช้งาน</span>
@@ -213,7 +230,8 @@ export default function Navbar() {
           {/* Mobile Menu Toggle Button */}
           <button
             type="button"
-            className="navbar-mobile-toggle"
+            className="navbar-mobile-toggle cursor-target"
+            data-cursor-label="Menu"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle navigation menu"
           >

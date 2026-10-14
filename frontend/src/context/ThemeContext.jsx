@@ -7,24 +7,16 @@ const ThemeContext = createContext({
 });
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(() => {
-    try {
-      const saved = localStorage.getItem('solocast_theme');
-      if (saved === 'light' || saved === 'dark') return saved;
-    } catch (e) {
-      // ignore
-    }
-    return 'dark';
-  });
+  const [theme, setTheme] = useState('dark');
 
   useEffect(() => {
     try {
-      document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem('solocast_theme', theme);
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('solocast_theme', 'dark');
     } catch (e) {
       // ignore
     }
-  }, [theme]);
+  }, []);
 
   const toggleTheme = () => {
     setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
