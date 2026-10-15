@@ -1243,6 +1243,11 @@ app.post('/api/widgets/:id/settings', (req, res) => {
       ...(settings || {})
     };
 
+    // สำหรับ dbd-perks: หากมีการตั้งค่า rewardNameSurvivor หรือ rewardNameKiller ให้เคลียร์ legacy rewardName ทิ้งอย่างเด็ดขาด
+    if (widgetId === 'dbd-perks' && (widgetSettingsStore[widgetId][userKey].rewardNameSurvivor || widgetSettingsStore[widgetId][userKey].rewardNameKiller)) {
+      delete widgetSettingsStore[widgetId][userKey].rewardName;
+    }
+
     saveWidgetSettings(widgetSettingsStore);
 
     // ส่งสัญญาณ Real-time ไปเฉพาะห้องของ User คนนี้เท่านั้น (OBS ของคนอื่นจะไม่ได้รับ)

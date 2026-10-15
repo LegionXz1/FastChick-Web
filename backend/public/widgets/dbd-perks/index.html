@@ -390,9 +390,11 @@
         // ตรวจจับชื่อรางวัลแบบ Exact Match (100%) เพื่อป้องกันการแย่งกันทำงานข้าม Widget
         const isSurvReward = survReward !== '' && rewardTitle === survReward;
         const isKillerReward = killerReward !== '' && rewardTitle === killerReward;
-        const isGeneralReward = generalReward !== '' && rewardTitle === generalReward;
+        // หากผู้ใช้มีการตั้งค่าแต้มเฉพาะเจาะจง (surv หรือ killer) แล้ว ให้ละเว้นแต้มรวมเดิม เพื่อป้องกันแต้มเก่าตกค้างทับซ้อน
+        const hasDedicatedRewards = survReward !== '' || killerReward !== '';
+        const isGeneralReward = !hasDedicatedRewards && generalReward !== '' && rewardTitle === generalReward;
 
-        console.log(`[DBD Perks] Redemption check: incoming="${rewardTitle}" | surv="${survReward}" (${isSurvReward}) | killer="${killerReward}" (${isKillerReward}) | general="${generalReward}" (${isGeneralReward})`);
+        console.log(`[DBD Perks] Redemption check: incoming="${rewardTitle}" | surv="${survReward}" (${isSurvReward}) | killer="${killerReward}" (${isKillerReward}) | general="${generalReward}" (${isGeneralReward}) | dedicatedMode=${hasDedicatedRewards}`);
 
         if (isSurvReward || isKillerReward || isGeneralReward) {
           shouldTrigger = true;
