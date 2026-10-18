@@ -6103,7 +6103,8 @@ server.listen(PORT, async () => {
   await initDatabase();
   await hydrateFromMongo();
 
-  // 🔄 Sync Widget Settings & Statuses from MongoDB periodically every 15s
+  // 🔄 Sync Widget Settings & Statuses from MongoDB periodically every 20 minutes (20 * 60 * 1000)
+  // ปรับรอบเวลาเพื่อลดภาระ CPU และลดการยิง Query ซ้ำซ้อนไปยัง MongoDB Atlas
   setInterval(async () => {
     try {
       if (isDbConnected()) {
@@ -6117,7 +6118,7 @@ server.listen(PORT, async () => {
         Object.assign(userWidgetStatus, mongoUserStatus);
       }
     } catch (_) {}
-  }, 15000);
+  }, 20 * 60 * 1000);
 
   // Spotify Now Playing - Poll and Broadcast every 15 seconds (Multi-user)
   if (spotify.isSpotifyConfigured()) {

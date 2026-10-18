@@ -16,6 +16,7 @@ import {
 import ChickenMascot from '../components/ChickenMascot';
 import UpdateModal from '../components/UpdateModal';
 import TiltCard from '../components/TiltCard';
+import AnimatedContent from '../components/AnimatedContent';
 
 const SERVICES = [
   {
@@ -342,19 +343,28 @@ export default function Landing() {
 
       {/* 3. PLATFORM FEATURES GRID */}
       <section className="features-section">
-        <div className="section-header text-center scroll-reveal">
-          <span className="eyebrow">FASTCHICK ADVANTAGES</span>
-          <h2 className="section-title">ทำไมสตรีมเมอร์ถึงชอบใช้ FASTCHICK?</h2>
-          <p className="section-subtitle">
-            ออกแบบมาเพื่อการสตรีมโดยเฉพาะ ลื่นไหล สบายตา และไม่กินสเปกคอมพิวเตอร์
-          </p>
-        </div>
+        <AnimatedContent distance={40} direction="vertical" duration={0.7} threshold={0.15}>
+          <div className="section-header text-center">
+            <span className="eyebrow">FASTCHICK ADVANTAGES</span>
+            <h2 className="section-title">ทำไมสตรีมเมอร์ถึงชอบใช้ FASTCHICK?</h2>
+            <p className="section-subtitle">
+              ออกแบบมาเพื่อการสตรีมโดยเฉพาะ ลื่นไหล สบายตา และไม่กินสเปกคอมพิวเตอร์
+            </p>
+          </div>
+        </AnimatedContent>
 
-        <div className="features-grid">
+        <AnimatedContent
+          distance={50}
+          direction="vertical"
+          duration={0.7}
+          stagger={0.1}
+          threshold={0.15}
+          className="features-grid"
+        >
           {PLATFORM_FEATURES.map((feat, idx) => {
             const Icon = feat.icon;
             return (
-              <div key={idx} className={`feature-card scroll-reveal scroll-stagger-${idx + 1}`}>
+              <div key={idx} className="feature-card">
                 <div className="feature-icon-wrapper">
                   <Icon size={22} className="feature-icon" />
                 </div>
@@ -363,59 +373,70 @@ export default function Landing() {
               </div>
             );
           })}
-        </div>
+        </AnimatedContent>
       </section>
 
       {/* 4. HOW IT WORKS 3-STEP */}
-      <section className="instructions-section doppel-shell scroll-reveal">
+      <section className="instructions-section doppel-shell">
         <div className="doppel-core">
-          <div className="section-header">
-            <span className="eyebrow">HOW TO USE</span>
-            <h2 className="section-title">วิธีเริ่มต้นใช้งานใน 3 สเต็ปง่ายๆ</h2>
-            <p className="section-subtitle">ไม่ต้องลงโปรแกรมเพิ่ม ไม่ต้องเขียนโค้ด แค่ก๊อปลิงก์ไปแปะใน OBS ก็ใช้ได้ทันที</p>
-          </div>
+          <AnimatedContent distance={40} direction="vertical" duration={0.7} threshold={0.15}>
+            <div className="section-header">
+              <span className="eyebrow">HOW TO USE</span>
+              <h2 className="section-title">วิธีเริ่มต้นใช้งานใน 3 สเต็ปง่ายๆ</h2>
+              <p className="section-subtitle">ไม่ต้องลงโปรแกรมเพิ่ม ไม่ต้องเขียนโค้ด แค่ก๊อปลิงก์ไปแปะใน OBS ก็ใช้ได้ทันที</p>
+            </div>
+          </AnimatedContent>
 
-          <div className="steps-grid">
+          <AnimatedContent
+            distance={50}
+            direction="vertical"
+            duration={0.7}
+            stagger={0.12}
+            threshold={0.15}
+            className="steps-grid"
+          >
             {HOW_IT_WORKS.map((st, i) => (
-              <div key={i} className={`step-card scroll-reveal scroll-stagger-${i + 1}`}>
+              <div key={i} className="step-card">
                 <span className="step-number">{st.step}</span>
                 <h3 className="step-card-title">{st.title}</h3>
                 <p className="step-card-desc">{st.desc}</p>
               </div>
             ))}
-          </div>
+          </AnimatedContent>
         </div>
       </section>
 
       {/* 5. CALL TO ACTION BANNER */}
-      <section className="cta-banner doppel-shell scroll-reveal">
-        <div className="doppel-core cta-content">
-          <div className="cta-text-side">
-            <h2 className="cta-title">พร้อมเพิ่มความสนุกให้สตรีมของคุณแล้วหรือยัง?</h2>
-            <p className="cta-desc">
-              ล็อกอินด้วยบัญชี Twitch แล้วเลือกวิดเจ็ตไปใส่บนจอได้เลย ฟรี ใช้งานง่าย ไม่ยุ่งยาก
-            </p>
+      <section className="cta-banner doppel-shell">
+        <AnimatedContent distance={40} direction="vertical" duration={0.8} threshold={0.15}>
+          <div className="doppel-core cta-content">
+            <div className="cta-text-side">
+              <h2 className="cta-title">พร้อมเพิ่มความสนุกให้สตรีมของคุณแล้วหรือยัง?</h2>
+              <p className="cta-desc">
+                ล็อกอินด้วยบัญชี Twitch แล้วเลือกวิดเจ็ตไปใส่บนจอได้เลย ฟรี ใช้งานง่าย ไม่ยุ่งยาก
+              </p>
+            </div>
+            <div className="cta-action-side">
+              <button
+                className="btn-island accent hero-btn cursor-target"
+                data-cursor-label="Start"
+                onClick={() => navigate('/dashboard')}
+              >
+                <span>เข้าสู่แผงควบคุม</span>
+                <div className="btn-icon-wrapper">
+                  <ArrowRight size={14} strokeWidth={2.5} />
+                </div>
+              </button>
+              <button
+                className="btn-island ghost cursor-target"
+                data-cursor-label="FAQ"
+                onClick={() => navigate('/faq')}
+              >
+                <span>คำถามที่พบบ่อย (FAQ)</span>
+              </button>
+            </div>
           </div>
-          <div className="cta-action-side">
-            <button
-              className="btn-island accent hero-btn cursor-target"
-              data-cursor-label="Start"
-              onClick={() => navigate('/dashboard')}
-            >
-              <span>เข้าสู่แผงควบคุม</span>
-              <div className="btn-icon-wrapper">
-                <ArrowRight size={14} strokeWidth={2.5} />
-              </div>
-            </button>
-            <button
-              className="btn-island ghost cursor-target"
-              data-cursor-label="FAQ"
-              onClick={() => navigate('/faq')}
-            >
-              <span>คำถามที่พบบ่อย (FAQ)</span>
-            </button>
-          </div>
-        </div>
+        </AnimatedContent>
       </section>
     </div>
   );
