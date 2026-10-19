@@ -1891,6 +1891,90 @@ export default function SecretSettings() {
                   </div>
                 )}
 
+                {/* Custom Counter Quick Settings: ชื่อสถิติ, คำสั่งนับสถิติในแชท, ส่งผลลัพธ์ลงแชท Twitch */}
+                {selectedWidget === 'custom-counter' && (
+                  <div className="setting-card">
+                    <div className="setting-card-header">
+                      <div>
+                        <h4 className="setting-card-title">ตั้งค่าด่วนตัวนับสถิติ (Custom Counter Quick Setup)</h4>
+                        <p className="setting-card-desc">
+                          กำหนดชื่อสถิติและคำสั่งแชทที่ต้องการ เพื่อพร้อมนำไปใช้งานบน OBS Studio และ Twitch ได้ทันที
+                        </p>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '0.75rem' }}>
+                      {/* 1. ชื่อสถิติ */}
+                      <div>
+                        <label style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', display: 'block', marginBottom: '0.35rem' }}>
+                          ชื่อสถิติ
+                        </label>
+                        <input
+                          type="text"
+                          value={fieldData.counterTitle !== undefined ? fieldData.counterTitle : 'ได้ออกประตู'}
+                          placeholder="เช่น ได้ออกประตู หรือ สถิติกรี๊ด"
+                          onChange={e => handleFieldChange('counterTitle', e.target.value)}
+                          style={{
+                            width: '100%',
+                            background: 'var(--surface-input)',
+                            border: '1px solid var(--border-primary)',
+                            padding: '0.6rem 0.85rem',
+                            borderRadius: 'var(--radius-md)',
+                            fontSize: '0.9rem',
+                            color: 'var(--text-primary)',
+                            fontWeight: 600
+                          }}
+                        />
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.25rem' }}>
+                          ข้อความหัวข้อสถิติที่จะแสดงบนหน้าจอ OBS
+                        </span>
+                      </div>
+
+                      {/* 2. คำสั่งนับสถิติในแชท */}
+                      <div>
+                        <label style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', display: 'block', marginBottom: '0.35rem' }}>
+                          คำสั่งนับสถิติในแชท
+                        </label>
+                        <input
+                          type="text"
+                          value={fieldData.commandPrefix !== undefined ? fieldData.commandPrefix : '!count'}
+                          placeholder="เช่น !count หรือ !door"
+                          onChange={e => handleFieldChange('commandPrefix', e.target.value)}
+                          style={{
+                            width: '100%',
+                            background: 'var(--surface-input)',
+                            border: '1px solid var(--border-primary)',
+                            padding: '0.6rem 0.85rem',
+                            borderRadius: 'var(--radius-md)',
+                            fontSize: '0.9rem',
+                            fontFamily: 'monospace',
+                            color: 'var(--accent-color)',
+                            fontWeight: 700
+                          }}
+                        />
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.25rem' }}>
+                          คำสั่งที่สตรีมเมอร์และม็อดพิมพ์ในแชทเพื่อปรับตัวเลข (เช่น <code>{fieldData.commandPrefix || '!count'} +1</code>, <code>{fieldData.commandPrefix || '!count'} -1</code>)
+                        </span>
+                      </div>
+
+                      {/* 3. ส่งผลลัพธ์ลงแชท Twitch */}
+                      <div
+                        className="switch-card"
+                        style={{ margin: 0, padding: '0.75rem 1rem', background: 'var(--surface-2)', border: '1px solid var(--border-subtle)' }}
+                        onClick={() => handleFieldChange('enableChatReply', fieldData.enableChatReply !== undefined ? !fieldData.enableChatReply : false)}
+                      >
+                        <div className="switch-card-info">
+                          <span className="switch-card-label" style={{ fontSize: '0.88rem' }}>ส่งผลลัพธ์ลงแชท Twitch</span>
+                          <span className="switch-card-desc">ให้บอทพิมพ์ข้อความตอบกลับยืนยันในแชทเมื่อมีคนปรับยอดสถิติ</span>
+                        </div>
+                        <div className={`switch-pill ${(fieldData.enableChatReply !== undefined ? fieldData.enableChatReply : (schema?.enableChatReply?.value ?? true)) ? 'is-on' : ''}`}>
+                          <div className="switch-pill-knob" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* 1. Twitch Channel Point Reward Banner */}
                 {(schema?.rewardName || schema?.rewardNameSurvivor || schema?.channelPointsReward) && selectedWidget !== 'custom-counter' && selectedWidget !== 'spotify-sr' && (
                   <div className="reward-setup-banner">
@@ -2166,7 +2250,7 @@ export default function SecretSettings() {
                 )}
 
                 {/* 4. Send to Twitch Chat Toggle Card */}
-                {(schema?.enableChat || schema?.enableChatMsg || schema?.enableChatReply) && (
+                {(schema?.enableChat || schema?.enableChatMsg || schema?.enableChatReply) && selectedWidget !== 'custom-counter' && (
                   <div
                     className="switch-card"
                     style={{ marginBottom: '1rem' }}
