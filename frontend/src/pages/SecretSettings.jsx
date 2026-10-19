@@ -1039,9 +1039,15 @@ export default function SecretSettings() {
     }
   };
 
-  // Test Sound via Web Audio API
+  // Test Sound via Web Audio API or custom URL
   const handleTestSound = () => {
     try {
+      if (fieldData.customSoundUrl && fieldData.customSoundUrl.trim()) {
+        const audio = new Audio(fieldData.customSoundUrl.trim());
+        audio.volume = Math.max(0.01, Math.min(1, (fieldData.soundVolume !== undefined ? fieldData.soundVolume : 60) / 100));
+        audio.play().catch(() => {});
+        return;
+      }
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (!AudioCtx) return;
       const ctx = new AudioCtx();
@@ -3467,18 +3473,53 @@ export default function SecretSettings() {
             {activeCategory === 'audio' && (
               <div className="animate-fade-up">
                 {/* Enable Sound Toggle Switch */}
-                {schema?.enableSound && (
-                  <div
-                    className="switch-card"
-                    style={{ marginBottom: '1rem' }}
-                    onClick={() => handleFieldChange('enableSound', !fieldData.enableSound)}
-                  >
-                    <div className="switch-card-info">
-                      <span className="switch-card-label">{schema.enableSound.label || 'เปิดเสียงเอฟเฟกต์'}</span>
-                      <span className="switch-card-desc">เปิดหรือปิดเสียงเอฟเฟกต์ทั้งหมดของ Widget นี้</span>
+                {(schema?.enableSound || schema?.soundEnabled) && (() => {
+                  const soundKey = schema?.soundEnabled ? 'soundEnabled' : 'enableSound';
+                  const soundField = schema[soundKey];
+                  const isEnabled = fieldData[soundKey] !== undefined ? Boolean(fieldData[soundKey]) : Boolean(soundField?.value ?? true);
+                  return (
+                    <div
+                      className="switch-card"
+                      style={{ marginBottom: '1rem' }}
+                      onClick={() => handleFieldChange(soundKey, !isEnabled)}
+                    >
+                      <div className="switch-card-info">
+                        <span className="switch-card-label">{soundField?.label || 'เปิดเสียงเอฟเฟกต์'}</span>
+                        <span className="switch-card-desc">เปิดหรือปิดเสียงเอฟเฟกต์ทั้งหมดของ Widget นี้</span>
+                      </div>
+                      <div className={`switch-pill ${isEnabled ? 'is-on' : ''}`}>
+                        <div className="switch-pill-knob" />
+                      </div>
                     </div>
-                    <div className={`switch-pill ${fieldData.enableSound ? 'is-on' : ''}`}>
-                      <div className="switch-pill-knob" />
+                  );
+                })()}
+
+                {/* Custom Sound URL Card */}
+                {schema?.customSoundUrl && (
+                  <div className="setting-card" style={{ marginBottom: '1rem' }}>
+                    <div className="setting-card-header">
+                      <div>
+                        <h4 className="setting-card-title">{schema.customSoundUrl.label || 'ลิงก์ไฟล์เสียงเอฟเฟกต์กำหนดเอง'}</h4>
+                        <p className="setting-card-desc">วางลิงก์ไฟล์เสียง .mp3 หรือ .wav ที่ต้องการ (เว้นว่างไว้หากต้องการใช้เสียงสังเคราะห์เริ่มต้น)</p>
+                      </div>
+                    </div>
+                    <div style={{ marginTop: '0.65rem' }}>
+                      <input
+                        type="text"
+                        value={fieldData.customSoundUrl || ''}
+                        onChange={e => handleFieldChange('customSoundUrl', e.target.value)}
+                        placeholder="https://.../sound.mp3"
+                        style={{
+                          width: '100%',
+                          background: 'var(--surface-input)',
+                          border: '1px solid var(--border-primary)',
+                          padding: '0.6rem 0.85rem',
+                          borderRadius: 'var(--radius-md)',
+                          fontSize: '0.9rem',
+                          fontFamily: 'monospace',
+                          color: 'var(--text-primary)'
+                        }}
+                      />
                     </div>
                   </div>
                 )}
