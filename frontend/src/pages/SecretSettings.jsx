@@ -57,6 +57,7 @@ import {
   ListMusic,
   CalendarCheck,
   Users,
+  LogIn,
   Gift,
   Clock,
   LogOut,
@@ -263,6 +264,10 @@ export default function SecretSettings() {
   const [isSyncingValorant, setIsSyncingValorant] = useState(false);
   const [counterCount, setCounterCount] = useState(0);
   const [counterCustomInput, setCounterCustomInput] = useState('');
+  const [partyTab, setPartyTab] = useState('create');
+  const [joinInputCode, setJoinInputCode] = useState('');
+  const [createInputCode, setCreateInputCode] = useState(() => 'party-' + Math.random().toString(36).substring(2, 6));
+  const [copiedRoom, setCopiedRoom] = useState(false);
 
   // DBD Scoreboard State
   const [scoreboardData, setScoreboardData] = useState({ killerKills: 0, killerDraws: 0, killerEscapes: 0 });
@@ -1999,79 +2004,278 @@ export default function SecretSettings() {
                         </div>
                       </div>
 
-                      {/* 4. รหัสห้องร่วมกัน (Shared Room / Party Mode) */}
-                      <div style={{
-                        background: 'rgba(59, 130, 246, 0.06)',
-                        border: '1px solid rgba(59, 130, 246, 0.25)',
-                        borderRadius: 'var(--radius-md)',
-                        padding: '0.85rem'
-                      }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem', flexWrap: 'wrap', gap: '0.4rem' }}>
-                          <label style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                            <Users size={15} color="#3b82f6" />
-                            <span>รหัสห้องร่วมกัน (Shared Room / Party Mode)</span>
-                          </label>
-                          {fieldData.sharedRoom ? (
-                            <span style={{ fontSize: '0.72rem', background: '#3b82f6', color: '#fff', padding: '0.15rem 0.5rem', borderRadius: '9999px', fontWeight: 700 }}>
-                              ใช้งานห้องร่วมกัน
+                      {/* 4. ระบบห้องร่วมกัน: สร้างห้อง vs เข้าร่วมห้อง */}
+                      {fieldData.sharedRoom ? (
+                        /* สถานะ: อยู่ในห้องแล้ว */
+                        <div style={{
+                          background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(30, 58, 138, 0.2) 100%)',
+                          border: '1px solid rgba(59, 130, 246, 0.35)',
+                          borderRadius: 'var(--radius-md)',
+                          padding: '1rem',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.75rem'
+                        }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                              <div style={{
+                                width: '8px',
+                                height: '8px',
+                                borderRadius: '50%',
+                                background: '#10b981',
+                                boxShadow: '0 0 10px #10b981'
+                              }} />
+                              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                                กำลังใช้งานห้องร่วมกัน (Party Mode)
+                              </span>
+                            </div>
+                            <span style={{ fontSize: '0.72rem', background: '#3b82f6', color: '#fff', padding: '0.2rem 0.6rem', borderRadius: '9999px', fontWeight: 700 }}>
+                              เชื่อมต่อแล้ว
                             </span>
-                          ) : (
-                            <span style={{ fontSize: '0.72rem', background: 'var(--surface-input)', color: 'var(--text-muted)', padding: '0.15rem 0.5rem', borderRadius: '9999px', fontWeight: 600 }}>
-                              นับคนเดียว (ส่วนตัว)
-                            </span>
-                          )}
+                          </div>
+
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            flexWrap: 'wrap',
+                            gap: '0.6rem',
+                            background: 'var(--surface-1)',
+                            border: '1px solid var(--border-primary)',
+                            borderRadius: 'var(--radius-md)',
+                            padding: '0.6rem 0.85rem'
+                          }}>
+                            <div>
+                              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>รหัสห้องของคุณ:</span>
+                              <span style={{ fontSize: '1.15rem', fontFamily: 'monospace', fontWeight: 900, color: '#60a5fa', letterSpacing: '0.5px' }}>
+                                {fieldData.sharedRoom}
+                              </span>
+                            </div>
+                            <div style={{ display: 'flex', gap: '0.45rem', alignItems: 'center' }}>
+                              <button
+                                type="button"
+                                className="btn-island"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(fieldData.sharedRoom);
+                                  setCopiedRoom(true);
+                                  setTimeout(() => setCopiedRoom(false), 2000);
+                                }}
+                                title="คัดลอกรหัสห้องส่งให้เพื่อน"
+                                style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem', fontWeight: 700 }}
+                              >
+                                {copiedRoom ? <Check size={14} color="#10b981" /> : <Copy size={14} />}
+                                <span>{copiedRoom ? 'คัดลอกแล้ว!' : 'คัดลอกรหัส'}</span>
+                              </button>
+                              <button
+                                type="button"
+                                className="btn-island"
+                                onClick={() => {
+                                  if (window.confirm('คุณต้องการออกจากห้องร่วมกัน และกลับไปนับสถิติคนเดียวใช่หรือไม่?')) {
+                                    handleFieldChange('sharedRoom', '');
+                                  }
+                                }}
+                                title="ออกจากห้องกลับไปนับคนเดียว"
+                                style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem', color: '#f87171', borderColor: 'rgba(239, 68, 68, 0.3)', fontWeight: 700 }}
+                              >
+                                <LogOut size={14} />
+                                <span>ออกจากห้อง</span>
+                              </button>
+                            </div>
+                          </div>
+
+                          <span style={{ fontSize: '0.74rem', color: '#94a3b8', lineHeight: 1.4 }}>
+                            ส่งรหัสห้องนี้ให้เพื่อนร่วมตี้ เพื่อให้เพื่อนกด "เข้าร่วมห้อง" ทุกคนจะเห็นและปรับตัวเลขนับพร้อมกันทันที
+                          </span>
                         </div>
-                        <div style={{ display: 'flex', gap: '0.45rem', alignItems: 'center' }}>
-                          <input
-                            type="text"
-                            value={fieldData.sharedRoom !== undefined ? fieldData.sharedRoom : ''}
-                            placeholder="เช่น dbd-party หรือ door-123 (เว้นว่าง = นับคนเดียว)"
-                            onChange={e => handleFieldChange('sharedRoom', e.target.value.trim().toLowerCase())}
-                            style={{
-                              flex: 1,
-                              background: 'var(--surface-input)',
-                              border: '1px solid var(--border-primary)',
-                              padding: '0.55rem 0.85rem',
-                              borderRadius: 'var(--radius-md)',
-                              fontSize: '0.88rem',
-                              fontFamily: 'monospace',
-                              fontWeight: 700,
-                              color: 'var(--accent-color)'
-                            }}
-                          />
-                          <button
-                            type="button"
-                            className="btn-island"
-                            onClick={() => {
-                              const rand = 'party-' + Math.random().toString(36).substring(2, 6);
-                              handleFieldChange('sharedRoom', rand);
-                            }}
-                            title="สุ่มรหัสห้องใหม่"
-                            style={{ padding: '0.55rem 0.75rem', fontSize: '0.8rem', whiteSpace: 'nowrap', fontWeight: 600 }}
-                          >
-                            <RefreshCw size={13} style={{ marginRight: '0.3rem' }} />
-                            <span>สุ่มรหัส</span>
-                          </button>
-                          {fieldData.sharedRoom && (
+                      ) : (
+                        /* สถานะ: ยังไม่ได้อยู่ในห้อง -> มีแท็บเลือกระหว่าง สร้างห้องใหม่ vs เข้าร่วมห้อง */
+                        <div style={{
+                          background: 'rgba(255, 255, 255, 0.02)',
+                          border: '1px solid var(--border-subtle)',
+                          borderRadius: 'var(--radius-md)',
+                          padding: '0.85rem',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.75rem'
+                        }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.4rem' }}>
+                            <label style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                              <Users size={15} color="#3b82f6" />
+                              <span>ระบบนับสถิติร่วมกัน (Party / Shared Room)</span>
+                            </label>
+                            <span style={{ fontSize: '0.72rem', background: 'var(--surface-input)', color: 'var(--text-muted)', padding: '0.15rem 0.5rem', borderRadius: '9999px', fontWeight: 600 }}>
+                              สถานะ: นับคนเดียว
+                            </span>
+                          </div>
+
+                          {/* Segmented Tab Buttons */}
+                          <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 1fr',
+                            gap: '0.4rem',
+                            background: 'var(--surface-input)',
+                            padding: '0.25rem',
+                            borderRadius: 'var(--radius-md)',
+                            border: '1px solid var(--border-primary)'
+                          }}>
                             <button
                               type="button"
-                              className="btn-island"
-                              onClick={() => {
-                                navigator.clipboard.writeText(fieldData.sharedRoom);
-                                alert('คัดลอกรหัสห้องแล้ว: ' + fieldData.sharedRoom);
+                              onClick={() => setPartyTab('create')}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.4rem',
+                                padding: '0.45rem 0.6rem',
+                                borderRadius: 'var(--radius-sm)',
+                                fontSize: '0.82rem',
+                                fontWeight: 700,
+                                border: 'none',
+                                cursor: 'pointer',
+                                background: partyTab === 'create' ? 'var(--accent-color)' : 'transparent',
+                                color: partyTab === 'create' ? '#fff' : 'var(--text-muted)',
+                                transition: 'all 0.2s ease'
                               }}
-                              title="คัดลอกรหัสห้องเพื่อส่งให้เพื่อน"
-                              style={{ padding: '0.55rem 0.75rem', fontSize: '0.8rem', whiteSpace: 'nowrap', fontWeight: 600 }}
                             >
-                              <Copy size={13} style={{ marginRight: '0.3rem' }} />
-                              <span>คัดลอก</span>
+                              <Plus size={14} />
+                              <span>สร้างห้องใหม่</span>
                             </button>
+                            <button
+                              type="button"
+                              onClick={() => setPartyTab('join')}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.4rem',
+                                padding: '0.45rem 0.6rem',
+                                borderRadius: 'var(--radius-sm)',
+                                fontSize: '0.82rem',
+                                fontWeight: 700,
+                                border: 'none',
+                                cursor: 'pointer',
+                                background: partyTab === 'join' ? '#3b82f6' : 'transparent',
+                                color: partyTab === 'join' ? '#fff' : 'var(--text-muted)',
+                                transition: 'all 0.2s ease'
+                              }}
+                            >
+                              <LogIn size={14} />
+                              <span>เข้าร่วมห้อง</span>
+                            </button>
+                          </div>
+
+                          {/* Tab 1: สร้างห้องใหม่ */}
+                          {partyTab === 'create' && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                              <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                                สุ่มรหัสห้องใหม่เพื่อเป็นหัวตี้ หรือพิมพ์ชื่อห้องที่ต้องการเองได้
+                              </span>
+                              <div style={{ display: 'flex', gap: '0.45rem', alignItems: 'center' }}>
+                                <input
+                                  type="text"
+                                  value={createInputCode}
+                                  placeholder="เช่น party-9x2m หรือ dbd-gang"
+                                  onChange={e => setCreateInputCode(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
+                                  style={{
+                                    flex: 1,
+                                    background: 'var(--surface-input)',
+                                    border: '1px solid var(--border-primary)',
+                                    padding: '0.55rem 0.85rem',
+                                    borderRadius: 'var(--radius-md)',
+                                    fontSize: '0.88rem',
+                                    fontFamily: 'monospace',
+                                    fontWeight: 700,
+                                    color: 'var(--text-primary)'
+                                  }}
+                                />
+                                <button
+                                  type="button"
+                                  className="btn-island"
+                                  onClick={() => {
+                                    const rand = 'party-' + Math.random().toString(36).substring(2, 6);
+                                    setCreateInputCode(rand);
+                                  }}
+                                  title="สุ่มรหัสใหม่"
+                                  style={{ padding: '0.55rem 0.75rem', fontSize: '0.8rem', whiteSpace: 'nowrap', fontWeight: 600 }}
+                                >
+                                  <RefreshCw size={13} style={{ marginRight: '0.3rem' }} />
+                                  <span>สุ่มรหัส</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn-island accent"
+                                  onClick={() => {
+                                    const code = (createInputCode || '').trim().toLowerCase().replace(/\s+/g, '-');
+                                    if (!code) {
+                                      alert('กรุณากรอกหรือสุ่มรหัสห้องก่อนสร้าง');
+                                      return;
+                                    }
+                                    handleFieldChange('sharedRoom', code);
+                                  }}
+                                  title="เปิดห้องใช้งาน"
+                                  style={{ padding: '0.55rem 0.95rem', fontSize: '0.82rem', whiteSpace: 'nowrap', fontWeight: 800 }}
+                                >
+                                  <span>สร้างห้อง</span>
+                                </button>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Tab 2: เข้าร่วมห้อง */}
+                          {partyTab === 'join' && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                              <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                                นำรหัสห้องที่ได้รับจากเพื่อนร่วมตี้มาใส่ที่นี่ เพื่อเชื่อมโยงตัวนับสถิติเดียวกัน
+                              </span>
+                              <div style={{ display: 'flex', gap: '0.45rem', alignItems: 'center' }}>
+                                <input
+                                  type="text"
+                                  value={joinInputCode}
+                                  placeholder="ใส่รหัสห้องของเพื่อน เช่น party-xxxx"
+                                  onChange={e => setJoinInputCode(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
+                                  style={{
+                                    flex: 1,
+                                    background: 'var(--surface-input)',
+                                    border: '1px solid var(--border-primary)',
+                                    padding: '0.55rem 0.85rem',
+                                    borderRadius: 'var(--radius-md)',
+                                    fontSize: '0.88rem',
+                                    fontFamily: 'monospace',
+                                    fontWeight: 700,
+                                    color: '#60a5fa'
+                                  }}
+                                />
+                                <button
+                                  type="button"
+                                  className="btn-island"
+                                  onClick={() => {
+                                    const code = (joinInputCode || '').trim().toLowerCase().replace(/\s+/g, '-');
+                                    if (!code) {
+                                      alert('กรุณากรอกรหัสห้องที่ต้องการเข้าร่วม');
+                                      return;
+                                    }
+                                    handleFieldChange('sharedRoom', code);
+                                    setJoinInputCode('');
+                                  }}
+                                  style={{
+                                    padding: '0.55rem 1rem',
+                                    fontSize: '0.82rem',
+                                    whiteSpace: 'nowrap',
+                                    fontWeight: 800,
+                                    background: '#3b82f6',
+                                    color: '#fff',
+                                    border: 'none',
+                                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+                                  }}
+                                >
+                                  <LogIn size={13} style={{ marginRight: '0.3rem' }} />
+                                  <span>เข้าร่วมห้อง</span>
+                                </button>
+                              </div>
+                            </div>
                           )}
                         </div>
-                        <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.35rem', lineHeight: 1.4 }}>
-                          แชร์รหัสนี้ให้เพื่อนร่วมตี้ใช้เหมือนกัน เพื่อให้นับสถิติตัวเดียวกันแบบ Real-time ทุกคนจะเห็นตัวเลขตรงกันทันที ไม่ว่าจะกดปุ่มบนเว็บ หรือพิมพ์คำสั่งในแชท Twitch ของใครก็ตาม (เว้นว่างไว้หากต้องการนับคนเดียว)
-                        </span>
-                      </div>
+                      )}
                     </div>
                   </div>
                 )}

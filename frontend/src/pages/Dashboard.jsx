@@ -2772,21 +2772,49 @@ function Dashboard() {
                                     </div>
                                   </div>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                    {fieldData.sharedRoom && (
-                                      <div style={{
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '0.4rem',
-                                        background: 'rgba(59, 130, 246, 0.15)',
-                                        border: '1px solid rgba(59, 130, 246, 0.3)',
-                                        borderRadius: '9999px',
-                                        padding: '0.3rem 0.85rem'
-                                      }}>
+                                    {fieldData.sharedRoom ? (
+                                      <button
+                                        type="button"
+                                        onClick={() => navigate('/settings?widget=custom-counter')}
+                                        title="คลิกเพื่อจัดการหรือออกจากห้อง"
+                                        style={{
+                                          display: 'inline-flex',
+                                          alignItems: 'center',
+                                          gap: '0.4rem',
+                                          background: 'rgba(59, 130, 246, 0.15)',
+                                          border: '1px solid rgba(59, 130, 246, 0.35)',
+                                          borderRadius: '9999px',
+                                          padding: '0.3rem 0.85rem',
+                                          cursor: 'pointer'
+                                        }}
+                                      >
                                         <Users size={14} color="#60a5fa" />
                                         <span style={{ fontSize: '0.78rem', color: '#60a5fa', fontWeight: 700 }}>
                                           ห้องร่วมกัน: {fieldData.sharedRoom}
                                         </span>
-                                      </div>
+                                      </button>
+                                    ) : (
+                                      <button
+                                        type="button"
+                                        onClick={() => navigate('/settings?widget=custom-counter')}
+                                        title="เปิดหน้าตั้งค่าเพื่อสร้างหรือเข้าร่วมห้องกับเพื่อน"
+                                        style={{
+                                          display: 'inline-flex',
+                                          alignItems: 'center',
+                                          gap: '0.4rem',
+                                          background: 'rgba(59, 130, 246, 0.08)',
+                                          border: '1px dashed rgba(59, 130, 246, 0.3)',
+                                          borderRadius: '9999px',
+                                          padding: '0.3rem 0.85rem',
+                                          cursor: 'pointer',
+                                          color: '#93c5fd',
+                                          fontSize: '0.78rem',
+                                          fontWeight: 700
+                                        }}
+                                      >
+                                        <Users size={14} color="#93c5fd" />
+                                        <span>สร้าง / เข้าร่วมห้อง</span>
+                                      </button>
                                     )}
                                     <div style={{
                                       display: 'inline-flex',
