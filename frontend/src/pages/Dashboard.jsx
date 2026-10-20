@@ -863,6 +863,11 @@ function Dashboard() {
         })
       });
       if (res.ok) {
+        const data = await res.json().catch(() => null);
+        if (selectedWidget === 'custom-counter' && data?.settings?.currentCount !== undefined) {
+          setCounterCount(Number(data.settings.currentCount));
+          setFieldData(prev => ({ ...prev, currentCount: Number(data.settings.currentCount) }));
+        }
         setSaveSuccess('ซิงค์ไปยัง OBS เรียบร้อยแล้ว');
         setTimeout(() => setSaveSuccess(''), 2500);
       }

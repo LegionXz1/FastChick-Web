@@ -1150,11 +1150,25 @@ app.get('/api/widgets/:id/settings', (req, res) => {
     const requestedUser = req.query.user || req.query.channel;
     let user = authUser ? authUser.userId : (requestedUser ? String(requestedUser).trim().toLowerCase().replace(/^@/, '') : '');
 
+    const formatSettings = (s) => {
+      if (!s || typeof s !== 'object') return s;
+      if (widgetId === 'custom-counter') {
+        const rCode = normalizeRoomCode(s.sharedRoom);
+        if (rCode && sharedCounterRoomsStore[rCode]) {
+          return {
+            ...s,
+            currentCount: Number(sharedCounterRoomsStore[rCode].count) || 0
+          };
+        }
+      }
+      return s;
+    };
+
     // 1. ถ้ามี User ID หรือ Username ให้ดึงการตั้งค่าเฉพาะของ User คนนั้น (รองรับทั้ง userId และ username)
     if (user && widgetSettingsStore[widgetId]) {
       // 1.1 ตรวจสอบแบบตรงตัว (Exact Key Match)
       if (widgetSettingsStore[widgetId][user]) {
-        return res.json(widgetSettingsStore[widgetId][user]);
+        return res.json(formatSettings(widgetSettingsStore[widgetId][user]));
       }
       // 1.2 ตรวจสอบผ่าน User Identifiers ที่เชื่อมโยงกัน (userId <-> username)
       const cleanUser = String(user).trim().toLowerCase().replace(/^@/, '');
@@ -1162,18 +1176,18 @@ app.get('/api/widgets/:id/settings', (req, res) => {
       allIds.add(cleanUser);
       for (const id of allIds) {
         if (widgetSettingsStore[widgetId][id]) {
-          return res.json(widgetSettingsStore[widgetId][id]);
+          return res.json(formatSettings(widgetSettingsStore[widgetId][id]));
         }
       }
       // 1.3 ตรวจสอบแบบ Case-insensitive
       for (const key of Object.keys(widgetSettingsStore[widgetId])) {
         if (key.toLowerCase() === cleanUser) {
-          return res.json(widgetSettingsStore[widgetId][key]);
+          return res.json(formatSettings(widgetSettingsStore[widgetId][key]));
         }
       }
       // 1.4 ถ้าไม่มีการตั้งค่าเฉพาะ ให้ใช้การตั้งค่า default (ถ้ามี)
       if (widgetSettingsStore[widgetId]['default']) {
-        return res.json(widgetSettingsStore[widgetId]['default']);
+        return res.json(formatSettings(widgetSettingsStore[widgetId]['default']));
       }
     }
 
@@ -1285,6 +1299,25 @@ app.post('/api/widgets/:id/settings', (req, res) => {
       for (const id of allIds) {
         io.to('user_' + id).emit('widget_settings_updated', settingsPayload);
       }
+
+      if (widgetId === 'custom-counter') {
+        const cSettings = widgetSettingsStore[widgetId][userKey] || {};
+        const cRoom = normalizeRoomCode(cSettings.sharedRoom);
+        const cCount = cRoom && sharedCounterRoomsStore[cRoom] ? Number(sharedCounterRoomsStore[cRoom].count) || 0 : Number(cSettings.currentCount) || 0;
+        const cPayload = {
+          userId: user,
+          associatedUserIds: Array.from(allIds),
+          sharedRoom: cRoom || undefined,
+          widgetId: 'custom-counter',
+          count: cCount,
+          delta: 0,
+          title: cSettings.counterTitle || 'ได้ออกประตู',
+          updatedBy: 'Settings'
+        };
+        for (const id of allIds) {
+          io.to('user_' + id).emit('counter_updated', cPayload);
+        }
+      }
     } else {
       io.emit('widget_settings_updated', {
         widgetId,
@@ -1309,7 +1342,7 @@ const SHARED_COUNTER_ROOMS_FILE = path.join(__dirname, 'data', 'shared_counter_r
 
 function normalizeRoomCode(room) {
   if (!room) return '';
-  return String(room).trim().toLowerCase();
+  return String(room).trim().toLowerCase().replace(/\s+/g, '-');
 }
 
 function loadSharedCounterRooms() {
@@ -1449,6 +1482,14 @@ function applyCounterUpdate({ userKey, action, delta, value, updatedBy }) {
     sharedCounterRoomsStore[roomCode].updatedAt = Date.now();
     sharedCounterRoomsStore[roomCode].updatedBy = updatedBy || 'System';
     saveSharedCounterRooms();
+
+    // ซิงค์ยอด currentCount ของสมาชิกทุกคนในห้องเดียวกันให้ตรงกันเสมอ
+    const roomMembers = getUsersInCounterRoom(roomCode);
+    for (const mem of roomMembers) {
+      if (widgetSettingsStore['custom-counter']?.[mem]) {
+        widgetSettingsStore['custom-counter'][mem].currentCount = newCount;
+      }
+    }
   }
 
   cs.currentCount = newCount;
@@ -4378,12 +4419,14 @@ async function processChatMessage(userId, e) {
 
         if (subCmd === '+' || subCmd.startsWith('+')) {
           const num = parseInt(subCmd.replace('+', ''), 10);
+          const p2Num = parts[2] ? parseInt(parts[2], 10) : NaN;
           action = 'inc';
-          delta = !isNaN(num) && num > 0 ? num : step;
+          delta = !isNaN(num) && num > 0 ? num : (!isNaN(p2Num) && p2Num > 0 ? p2Num : step);
         } else if (subCmd === '-' || subCmd.startsWith('-')) {
           const num = parseInt(subCmd.replace('-', ''), 10);
+          const p2Num = parts[2] ? parseInt(parts[2], 10) : NaN;
           action = 'dec';
-          delta = !isNaN(num) && num > 0 ? num : step;
+          delta = !isNaN(num) && num > 0 ? num : (!isNaN(p2Num) && p2Num > 0 ? p2Num : step);
         } else if (subCmd === 'reset') {
           action = 'reset';
         } else if (subCmd === 'set' && parts[2] !== undefined) {

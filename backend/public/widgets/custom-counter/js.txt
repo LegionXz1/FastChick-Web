@@ -95,8 +95,11 @@ function applySettings(fieldData) {
   if (!fieldData) return;
 
   if (fieldData.sharedRoom !== undefined) {
-    const newRoom = String(fieldData.sharedRoom || '').trim().toLowerCase();
+    const newRoom = String(fieldData.sharedRoom || '').trim().toLowerCase().replace(/\s+/g, '-');
     if (newRoom !== currentSharedRoom) {
+      if (typeof socket !== 'undefined' && currentSharedRoom) {
+        socket.emit('leave_counter_room', currentSharedRoom);
+      }
       currentSharedRoom = newRoom;
       if (typeof socket !== 'undefined' && currentSharedRoom) {
         socket.emit('join_counter_room', currentSharedRoom);

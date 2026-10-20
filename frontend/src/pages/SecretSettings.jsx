@@ -622,6 +622,10 @@ export default function SecretSettings() {
       });
       const data = await res.json();
       if (data.success) {
+        if (selectedWidget === 'custom-counter' && data.settings?.currentCount !== undefined) {
+          setCounterCount(Number(data.settings.currentCount));
+          setFieldData(prev => ({ ...prev, currentCount: Number(data.settings.currentCount) }));
+        }
         setOriginalFieldData(dataToSave);
         if (!isSilent) {
           setSaveSuccess('บันทึกการตั้งค่าสำเร็จและซิงค์ไปยัง OBS เรียบร้อยแล้ว!');
