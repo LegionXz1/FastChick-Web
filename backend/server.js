@@ -1243,6 +1243,26 @@ app.post('/api/widgets/:id/settings', (req, res) => {
       ...(settings || {})
     };
 
+    // สำหรับ custom-counter: ตรวจสอบและซิงค์ห้องร่วมกัน (Shared Room)
+    if (widgetId === 'custom-counter') {
+      const currentCS = widgetSettingsStore[widgetId][userKey];
+      const roomCode = normalizeRoomCode(currentCS?.sharedRoom);
+      if (roomCode) {
+        if (!sharedCounterRoomsStore[roomCode]) {
+          sharedCounterRoomsStore[roomCode] = {
+            roomCode,
+            count: Number(currentCS.currentCount) || 0,
+            title: currentCS.counterTitle || 'ได้ออกประตู',
+            updatedAt: Date.now(),
+            updatedBy: userKey
+          };
+          saveSharedCounterRooms();
+        } else {
+          currentCS.currentCount = Number(sharedCounterRoomsStore[roomCode].count) || 0;
+        }
+      }
+    }
+
     // สำหรับ dbd-perks: หากมีการตั้งค่า rewardNameSurvivor หรือ rewardNameKiller ให้เคลียร์ legacy rewardName ทิ้งอย่างเด็ดขาด
     if (widgetId === 'dbd-perks' && (widgetSettingsStore[widgetId][userKey].rewardNameSurvivor || widgetSettingsStore[widgetId][userKey].rewardNameKiller)) {
       delete widgetSettingsStore[widgetId][userKey].rewardName;
@@ -1281,17 +1301,270 @@ app.post('/api/widgets/:id/settings', (req, res) => {
 });
 
 // ------------------------------------------------------------
+
+// ------------------------------------------------------------
+// Custom Counter Shared Rooms & Helper Functions
+// ------------------------------------------------------------
+const SHARED_COUNTER_ROOMS_FILE = path.join(__dirname, 'data', 'shared_counter_rooms.json');
+
+function normalizeRoomCode(room) {
+  if (!room) return '';
+  return String(room).trim().toLowerCase();
+}
+
+function loadSharedCounterRooms() {
+  try {
+    if (fs.existsSync(SHARED_COUNTER_ROOMS_FILE)) {
+      return JSON.parse(fs.readFileSync(SHARED_COUNTER_ROOMS_FILE, 'utf8'));
+    }
+  } catch (e) { }
+  return {};
+}
+
+function saveSharedCounterRooms(data = sharedCounterRoomsStore) {
+  try {
+    const dir = path.dirname(SHARED_COUNTER_ROOMS_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(SHARED_COUNTER_ROOMS_FILE, JSON.stringify(data, null, 2), 'utf8');
+  } catch (e) { }
+  try {
+    if (typeof saveAllItems === 'function') {
+      saveAllItems('shared_counter_rooms', data);
+    }
+  } catch (_) { }
+}
+
+const sharedCounterRoomsStore = loadSharedCounterRooms();
+
+function getCounterSharedRoom(userId) {
+  if (!userId) return null;
+  const cleanU = String(userId).trim().toLowerCase().replace('@', '');
+  let cs = widgetSettingsStore['custom-counter']?.[userId];
+  if (!cs && cleanU !== userId) {
+    cs = widgetSettingsStore['custom-counter']?.[cleanU];
+  }
+  if (!cs) {
+    const ids = getAssociatedUserIdentifiers(cleanU);
+    for (const id of ids) {
+      if (widgetSettingsStore['custom-counter']?.[id]) {
+        cs = widgetSettingsStore['custom-counter'][id];
+        break;
+      }
+    }
+  }
+  if (!cs) {
+    cs = widgetSettingsStore['custom-counter']?.['default'];
+  }
+  const room = normalizeRoomCode(cs?.sharedRoom);
+  return room || null;
+}
+
+function getUsersInCounterRoom(roomCode) {
+  const norm = normalizeRoomCode(roomCode);
+  if (!norm) return [];
+  const matchedUsers = new Set();
+  const counterSettings = widgetSettingsStore['custom-counter'] || {};
+  for (const [uid, settings] of Object.entries(counterSettings)) {
+    if (settings && typeof settings === 'object') {
+      if (normalizeRoomCode(settings.sharedRoom) === norm) {
+        matchedUsers.add(uid);
+      }
+    }
+  }
+  return Array.from(matchedUsers);
+}
+
+function applyCounterUpdate({ userKey, action, delta, value, updatedBy }) {
+  const cleanUser = String(userKey || 'default').trim().toLowerCase().replace('@', '');
+
+  if (!widgetSettingsStore['custom-counter']) {
+    widgetSettingsStore['custom-counter'] = {};
+  }
+
+  let cs = widgetSettingsStore['custom-counter'][userKey];
+  if (!cs && cleanUser !== userKey) {
+    cs = widgetSettingsStore['custom-counter'][cleanUser];
+  }
+  if (!cs) {
+    const ids = getAssociatedUserIdentifiers(cleanUser);
+    for (const id of ids) {
+      if (widgetSettingsStore['custom-counter']?.[id]) {
+        cs = widgetSettingsStore['custom-counter'][id];
+        break;
+      }
+    }
+  }
+  if (!cs) {
+    cs = widgetSettingsStore['custom-counter']['default'] || {
+      counterTitle: 'ได้ออกประตู',
+      currentCount: 0,
+      unitText: 'ครั้ง',
+      stepAmount: 1
+    };
+  }
+
+  const roomCode = normalizeRoomCode(cs.sharedRoom);
+  const step = Number(cs.stepAmount) || 1;
+  const title = cs.counterTitle || 'ได้ออกประตู';
+
+  let currentCount = 0;
+  if (roomCode) {
+    if (!sharedCounterRoomsStore[roomCode]) {
+      sharedCounterRoomsStore[roomCode] = {
+        roomCode,
+        count: Number(cs.currentCount) || 0,
+        title,
+        updatedAt: Date.now(),
+        updatedBy: updatedBy || 'System'
+      };
+      saveSharedCounterRooms();
+    }
+    currentCount = Number(sharedCounterRoomsStore[roomCode].count) || 0;
+  } else {
+    currentCount = Number(cs.currentCount) || 0;
+  }
+
+  let newCount = currentCount;
+  let computedDelta = 0;
+
+  if (action === 'inc') {
+    const d = Number(delta !== undefined ? delta : step);
+    newCount = Math.max(0, currentCount + d);
+    computedDelta = newCount - currentCount;
+  } else if (action === 'dec') {
+    const d = Number(delta !== undefined ? delta : step);
+    newCount = Math.max(0, currentCount - d);
+    computedDelta = newCount - currentCount;
+  } else if (action === 'set') {
+    newCount = Math.max(0, Number(value) || 0);
+    computedDelta = newCount - currentCount;
+  } else if (action === 'reset') {
+    newCount = 0;
+    computedDelta = -currentCount;
+  }
+
+  // Update storage
+  if (roomCode) {
+    sharedCounterRoomsStore[roomCode].count = newCount;
+    sharedCounterRoomsStore[roomCode].updatedAt = Date.now();
+    sharedCounterRoomsStore[roomCode].updatedBy = updatedBy || 'System';
+    saveSharedCounterRooms();
+  }
+
+  cs.currentCount = newCount;
+  widgetSettingsStore['custom-counter'][userKey] = cs;
+  saveWidgetSettings(widgetSettingsStore);
+
+  // Determine recipients
+  const targetUsers = [userKey];
+  if (roomCode) {
+    const roomUsers = getUsersInCounterRoom(roomCode);
+    for (const ru of roomUsers) {
+      if (!targetUsers.includes(ru)) targetUsers.push(ru);
+    }
+  }
+
+  const allAssociated = new Set();
+  for (const tu of targetUsers) {
+    allAssociated.add(tu);
+    const ctu = String(tu).trim().toLowerCase().replace('@', '');
+    allAssociated.add(ctu);
+    const ids = getAssociatedUserIdentifiers(ctu);
+    for (const id of ids) allAssociated.add(id);
+  }
+  const associatedUserIdsList = Array.from(allAssociated);
+
+  const payload = {
+    userId: userKey,
+    associatedUserIds: associatedUserIdsList,
+    sharedRoom: roomCode || undefined,
+    widgetId: 'custom-counter',
+    count: newCount,
+    delta: computedDelta,
+    title,
+    updatedBy: updatedBy || 'Dashboard'
+  };
+
+  // Broadcast to room channel
+  if (roomCode) {
+    io.to('counter_room_' + roomCode).emit('counter_updated', payload);
+    io.to('counter_room_' + roomCode).emit('onEventReceived', {
+      type: 'counter_update',
+      listener: 'counter_updated',
+      data: payload
+    });
+  }
+
+  // Broadcast to each user's room
+  for (const tu of targetUsers) {
+    emitToUser(tu, 'counter_updated', payload);
+    emitToUser(tu, 'onEventReceived', {
+      type: 'counter_update',
+      listener: 'counter_updated',
+      userId: tu,
+      associatedUserIds: associatedUserIdsList,
+      data: payload
+    });
+  }
+
+  return {
+    success: true,
+    count: newCount,
+    delta: computedDelta,
+    title,
+    user: userKey,
+    sharedRoom: roomCode || null
+  };
+}
+
 // 📊 Custom Counter Specific Endpoints
 // ------------------------------------------------------------
 app.get('/api/widgets/custom-counter/data', (req, res) => {
   try {
     const user = req.query.user || req.query.channel || 'default';
-    const settings = widgetSettingsStore['custom-counter']?.[user] || widgetSettingsStore['custom-counter']?.['default'] || {};
+    const cleanUser = String(user).trim().toLowerCase().replace('@', '');
+    let settings = widgetSettingsStore['custom-counter']?.[user];
+    if (!settings && cleanUser !== user) {
+      settings = widgetSettingsStore['custom-counter']?.[cleanUser];
+    }
+    if (!settings) {
+      const ids = getAssociatedUserIdentifiers(cleanUser);
+      for (const id of ids) {
+        if (widgetSettingsStore['custom-counter']?.[id]) {
+          settings = widgetSettingsStore['custom-counter'][id];
+          break;
+        }
+      }
+    }
+    if (!settings) {
+      settings = widgetSettingsStore['custom-counter']?.['default'] || {};
+    }
+
+    const roomCode = normalizeRoomCode(req.query.room || settings.sharedRoom);
+    let count = Number(settings.currentCount) || 0;
+    if (roomCode) {
+      if (!sharedCounterRoomsStore[roomCode]) {
+        sharedCounterRoomsStore[roomCode] = {
+          roomCode,
+          count,
+          title: settings.counterTitle || 'ได้ออกประตู',
+          updatedAt: Date.now(),
+          updatedBy: 'System'
+        };
+        saveSharedCounterRooms();
+      }
+      count = Number(sharedCounterRoomsStore[roomCode].count) || 0;
+    }
+
     res.json({
-      count: Number(settings.currentCount) || 0,
-      title: settings.counterTitle || 'จำนวนครั้งที่กรี๊ด',
+      count,
+      title: settings.counterTitle || 'ได้ออกประตู',
       unit: settings.unitText || 'ครั้ง',
-      settings
+      sharedRoom: roomCode || null,
+      settings: {
+        ...settings,
+        currentCount: count
+      }
     });
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -1304,62 +1577,23 @@ app.post('/api/widgets/custom-counter/update', (req, res) => {
     const { user, action, delta, value, updatedBy } = req.body || {};
     const userKey = authUser?.userId || user || 'default';
 
-    if (!widgetSettingsStore['custom-counter']) {
-      widgetSettingsStore['custom-counter'] = {};
-    }
-    const cs = widgetSettingsStore['custom-counter'][userKey] || {
-      counterTitle: 'จำนวนครั้งที่กรี๊ด',
-      currentCount: 0,
-      unitText: 'ครั้ง'
-    };
-
-    const currentCount = Number(cs.currentCount) || 0;
-    let newCount = currentCount;
-    let computedDelta = 0;
-
-    if (action === 'inc') {
-      const d = Number(delta !== undefined ? delta : (cs.stepAmount || 1));
-      newCount = Math.max(0, currentCount + d);
-      computedDelta = newCount - currentCount;
-    } else if (action === 'dec') {
-      const d = Number(delta !== undefined ? delta : (cs.stepAmount || 1));
-      newCount = Math.max(0, currentCount - d);
-      computedDelta = newCount - currentCount;
-    } else if (action === 'set') {
-      newCount = Math.max(0, Number(value) || 0);
-      computedDelta = newCount - currentCount;
-    } else if (action === 'reset') {
-      newCount = 0;
-      computedDelta = -currentCount;
-    }
-
-    cs.currentCount = newCount;
-    widgetSettingsStore['custom-counter'][userKey] = cs;
-    saveWidgetSettings(widgetSettingsStore);
-
-    const title = cs.counterTitle || 'จำนวนครั้งที่กรี๊ด';
-    const payload = {
-      userId: userKey,
-      widgetId: 'custom-counter',
-      count: newCount,
-      delta: computedDelta,
-      title,
-      updatedBy: updatedBy || 'Dashboard'
-    };
-
-    const cleanUser = String(userKey).trim().toLowerCase().replace('@', '');
-    const allIds = getAssociatedUserIdentifiers(cleanUser);
-    allIds.add(cleanUser);
-
-    emitToUser(userKey, 'counter_updated', payload);
-    emitToUser(userKey, 'onEventReceived', {
-      type: 'counter_update',
-      userId: userKey,
-      data: payload
+    const result = applyCounterUpdate({
+      userKey,
+      action,
+      delta,
+      value,
+      updatedBy: updatedBy || authUser?.username || 'Dashboard'
     });
 
-    console.log(`[Custom Counter] 🔢 User ${userKey} counter updated: ${currentCount} -> ${newCount} (${computedDelta >= 0 ? '+' : ''}${computedDelta}) by ${updatedBy || 'Dashboard'}`);
-    res.json({ success: true, count: newCount, delta: computedDelta, title, user: userKey });
+    console.log(`[Custom Counter] User ${userKey} counter updated: count=${result.count} (${result.delta >= 0 ? '+' : ''}${result.delta}) by ${updatedBy || 'Dashboard'}${result.sharedRoom ? ` [Room: ${result.sharedRoom}]` : ''}`);
+    res.json({
+      success: true,
+      count: result.count,
+      delta: result.delta,
+      title: result.title,
+      user: userKey,
+      sharedRoom: result.sharedRoom
+    });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -3745,7 +3979,7 @@ app.post('/api/chat/send', async (req, res) => {
       await ctx.chat.sendChatMessage(targetUserId, message);
     });
 
-    console.log(`[Twitch Chat] 💬 Sent chat message to channel ${targetUserId} as user: "${message}"`);
+    console.log(`[Twitch Chat] Sent chat message to channel ${targetUserId} as user: "${message}"`);
     res.json({ success: true, user: targetUserId, message });
   } catch (err) {
     console.error(`[Twitch Chat] ❌ Error sending message:`, err?.message || err);
@@ -4105,12 +4339,28 @@ async function processChatMessage(userId, e) {
 
         const subCmd = (parts[1] || '').trim().toLowerCase();
 
+        const sharedRoom = getCounterSharedRoom(userId);
+        if (sharedRoom) {
+          if (!sharedCounterRoomsStore[sharedRoom]) {
+            sharedCounterRoomsStore[sharedRoom] = {
+              roomCode: sharedRoom,
+              count: currentVal,
+              title,
+              updatedAt: Date.now(),
+              updatedBy: 'System'
+            };
+            saveSharedCounterRooms();
+          }
+          currentVal = Number(sharedCounterRoomsStore[sharedRoom].count) || 0;
+        }
+
         // 1. ถ้าพิมพ์แค่ !count เพื่อดูยอดปัจจุบัน
         if (!subCmd) {
           if (counterSettings.enableChatReply !== false) {
             try {
+              const roomTag = sharedRoom ? ` (ห้อง: ${sharedRoom})` : '';
               await apiClient?.asUser(userId, async (ctx) => {
-                await ctx.chat.sendChatMessage(userId, `@${displayName} สถิติปัจจุบัน [${title}]: ${currentVal} ${unit}`);
+                await ctx.chat.sendChatMessage(userId, `@${displayName} สถิติปัจจุบัน [${title}]${roomTag}: ${currentVal} ${unit}`);
               });
             } catch (_) {}
           }
@@ -4123,73 +4373,53 @@ async function processChatMessage(userId, e) {
           return;
         }
 
-        let newVal = currentVal;
+        let action = '';
         let delta = 0;
+        let value = 0;
 
         if (subCmd === '+' || subCmd.startsWith('+')) {
           const num = parseInt(subCmd.replace('+', ''), 10);
+          action = 'inc';
           delta = !isNaN(num) && num > 0 ? num : step;
-          newVal = Math.max(0, currentVal + delta);
         } else if (subCmd === '-' || subCmd.startsWith('-')) {
           const num = parseInt(subCmd.replace('-', ''), 10);
-          const decAmount = !isNaN(num) && num > 0 ? num : step;
-          delta = -decAmount;
-          newVal = Math.max(0, currentVal - decAmount);
+          action = 'dec';
+          delta = !isNaN(num) && num > 0 ? num : step;
         } else if (subCmd === 'reset') {
-          newVal = 0;
-          delta = -currentVal;
+          action = 'reset';
         } else if (subCmd === 'set' && parts[2] !== undefined) {
           const num = parseInt(parts[2], 10);
           if (!isNaN(num)) {
-            newVal = Math.max(0, num);
-            delta = newVal - currentVal;
+            action = 'set';
+            value = Math.max(0, num);
           }
         } else if (!isNaN(parseInt(subCmd, 10))) {
-          const num = parseInt(subCmd, 10);
-          delta = num;
-          newVal = Math.max(0, currentVal + num);
+          action = 'inc';
+          delta = parseInt(subCmd, 10);
         } else {
           return;
         }
 
-        counterSettings.currentCount = newVal;
-        widgetSettingsStore['custom-counter'] = widgetSettingsStore['custom-counter'] || {};
-        widgetSettingsStore['custom-counter'][userId] = counterSettings;
-        saveWidgetSettings(widgetSettingsStore);
-
-        const payload = {
-          userId,
-          widgetId: 'custom-counter',
-          count: newVal,
+        const result = applyCounterUpdate({
+          userKey: userId,
+          action,
           delta,
-          title,
+          value,
           updatedBy: displayName
-        };
+        });
 
-        const cleanUser = String(userId).trim().toLowerCase().replace('@', '');
-        const allIds = getAssociatedUserIdentifiers(cleanUser);
-        allIds.add(cleanUser);
-
-        for (const id of allIds) {
-          io.to('user_' + id).emit('counter_updated', payload);
-          io.to('user_' + id).emit('onEventReceived', {
-            type: 'counter_update',
-            userId,
-            data: payload
-          });
-        }
-
-        console.log(`[Custom Counter] 💬 Chat command from ${displayName} updated ${userId}'s counter: ${currentVal} -> ${newVal} (${delta >= 0 ? '+' : ''}${delta})`);
+        console.log(`[Custom Counter] Chat command from ${displayName} updated ${userId}'s counter: ${currentVal} -> ${result.count} (${result.delta >= 0 ? '+' : ''}${result.delta})${result.sharedRoom ? ` [Room: ${result.sharedRoom}]` : ''}`);
 
         if (counterSettings.enableChatReply !== false) {
           try {
             let replyTpl = counterSettings.chatReplyTemplate || '{user} อัปเดต {title} เป็น {count} {unit} แล้ว!';
+            const roomNotice = result.sharedRoom ? ` [ห้อง ${result.sharedRoom}]` : '';
             replyTpl = replyTpl
               .replace('{user}', `@${displayName}`)
-              .replace('{title}', title)
-              .replace('{count}', newVal)
+              .replace('{title}', result.title || title)
+              .replace('{count}', result.count)
               .replace('{unit}', unit)
-              .replace('{delta}', delta >= 0 ? `+${delta}` : `${delta}`);
+              .replace('{delta}', result.delta >= 0 ? `+${result.delta}` : `${result.delta}`) + roomNotice;
             await apiClient?.asUser(userId, async (ctx) => {
               await ctx.chat.sendChatMessage(userId, replyTpl);
             });
@@ -4706,33 +4936,14 @@ function startEventSub(userId) {
         const targetReward = (cs.rewardName || 'เพิ่มยอดกรี๊ด').replace(/\u00a0/g, ' ').trim().toLowerCase();
         const incomingReward = (e.rewardTitle || '').replace(/\u00a0/g, ' ').trim().toLowerCase();
         if (isTriggerPoints && targetReward !== '' && incomingReward === targetReward) {
-          const prevCount = Number(cs.currentCount) || 0;
           const step = Number(cs.stepAmount) || 1;
-          const newCount = prevCount + step;
-          cs.currentCount = newCount;
-          widgetSettingsStore['custom-counter'] = widgetSettingsStore['custom-counter'] || {};
-          widgetSettingsStore['custom-counter'][userId] = cs;
-          saveWidgetSettings(widgetSettingsStore);
-
-          const payload = {
-            userId,
-            associatedUserIds: associatedUserIdsList,
-            widgetId: 'custom-counter',
-            count: newCount,
+          const resRedeem = applyCounterUpdate({
+            userKey: userId,
+            action: 'inc',
             delta: step,
-            title: cs.counterTitle || 'จำนวนครั้งที่กรี๊ด',
-            updatedBy: e.userDisplayName || e.userName
-          };
-
-          emitToUser(userId, 'counter_updated', payload);
-          emitToUser(userId, 'onEventReceived', {
-            type: 'counter_update',
-            listener: 'counter_updated',
-            userId,
-            associatedUserIds: associatedUserIdsList,
-            data: payload
+            updatedBy: e.userDisplayName || e.userName || 'ChannelPoints'
           });
-          console.log(`[Custom Counter] Channel Points redemption incremented counter for user ${userId} to ${newCount}`);
+          console.log(`[Custom Counter] Channel Points redemption incremented counter for user ${userId} to ${resRedeem.count}${resRedeem.sharedRoom ? ` in room ${resRedeem.sharedRoom}` : ''}`);
         }
       }
     } catch (cErr) {
@@ -4967,6 +5178,10 @@ io.on('connection', (socket) => {
         socket.join('user_' + id);
         socket.join('channel_' + id);
       }
+      const userCounterRoom = getCounterSharedRoom(targetUserId);
+      if (userCounterRoom) {
+        socket.join('counter_room_' + userCounterRoom);
+      }
       console.log(`Socket ${socket.id} joined user/channel rooms:`, Array.from(allIds));
     } else {
       console.warn(`[Socket] Unauthorized join_user attempt on socket ${socket.id}`);
@@ -5002,6 +5217,20 @@ io.on('connection', (socket) => {
         socket.join('user_' + id);
         socket.join('channel_' + id);
       }
+    }
+  });
+
+  socket.on('join_counter_room', (roomCode) => {
+    const clean = normalizeRoomCode(roomCode);
+    if (clean) {
+      socket.join('counter_room_' + clean);
+    }
+  });
+
+  socket.on('leave_counter_room', (roomCode) => {
+    const clean = normalizeRoomCode(roomCode);
+    if (clean) {
+      socket.leave('counter_room_' + clean);
     }
   });
 
@@ -5087,37 +5316,14 @@ io.on('connection', (socket) => {
         const targetReward = (cs.rewardName || 'เพิ่มยอดกรี๊ด').replace(/\u00a0/g, ' ').trim().toLowerCase();
         const incomingReward = (payload.data.rewardTitle || '').replace(/\u00a0/g, ' ').trim().toLowerCase();
         if (isTriggerPoints && targetReward !== '' && incomingReward === targetReward) {
-          const prevCount = Number(cs.currentCount) || 0;
           const step = Number(cs.stepAmount) || 1;
-          const newCount = prevCount + step;
-          cs.currentCount = newCount;
-          widgetSettingsStore['custom-counter'] = widgetSettingsStore['custom-counter'] || {};
-          widgetSettingsStore['custom-counter'][payload.userId] = cs;
-          saveWidgetSettings(widgetSettingsStore);
-
-          const cleanUid = String(payload.userId).trim().toLowerCase().replace(/^@/, '');
-          const allIds = getAssociatedUserIdentifiers(cleanUid);
-          allIds.add(cleanUid);
-          const associatedList = Array.from(allIds);
-
-          const counterPayload = {
-            userId: payload.userId,
-            associatedUserIds: associatedList,
-            widgetId: 'custom-counter',
-            count: newCount,
+          const resTestRedeem = applyCounterUpdate({
+            userKey: payload.userId,
+            action: 'inc',
             delta: step,
-            title: cs.counterTitle || 'จำนวนครั้งที่กรี๊ด',
             updatedBy: payload.data.userDisplayName || payload.data.name || 'TestViewer'
-          };
-
-          emitToUser(payload.userId, 'counter_updated', counterPayload);
-          emitToUser(payload.userId, 'onEventReceived', {
-            type: 'counter_update',
-            listener: 'counter_updated',
-            userId: payload.userId,
-            associatedUserIds: associatedList,
-            data: counterPayload
           });
+          console.log(`[Custom Counter] Test redemption incremented counter for user ${payload.userId} to ${resTestRedeem.count}${resTestRedeem.sharedRoom ? ` in room ${resTestRedeem.sharedRoom}` : ''}`);
         }
       }
     } catch (_) {}
@@ -5285,7 +5491,7 @@ io.on('connection', (socket) => {
       await apiClient.asUser(uid, async (ctx) => {
         await ctx.chat.sendChatMessage(uid, message);
       });
-      console.log(`[Twitch Chat Socket] 💬 Sent chat for user ${uid}: "${message}"`);
+      console.log(`[Twitch Chat Socket] Sent chat for user ${uid}: "${message}"`);
     } catch (err) {
       console.error(`[Twitch Chat Socket] ❌ Error:`, err?.message || err);
     }

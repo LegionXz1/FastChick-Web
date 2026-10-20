@@ -11,6 +11,12 @@
     "value": 0,
     "group": "General Settings"
   },
+  "sharedRoom": {
+    "type": "text",
+    "label": "รหัสห้องร่วมกัน (Shared Room Code)",
+    "value": "",
+    "group": "General Settings"
+  },
   "unitText": {
     "type": "text",
     "label": "หน่วยนับ",

@@ -492,8 +492,15 @@ export default function SecretSettings() {
 
     const handleCounterUpdated = (data) => {
       if (!data) return;
-      if (status.userId && data.userId && String(data.userId).toLowerCase() !== String(status.userId).toLowerCase()) {
-        return;
+      const myId = String(status.userId || status.username || '').toLowerCase();
+      if (myId && data.userId && String(data.userId).toLowerCase() !== myId) {
+        const isAssociated = Array.isArray(data.associatedUserIds) && data.associatedUserIds.some(id => String(id).toLowerCase() === myId);
+        const currentRoom = String(fieldData.sharedRoom || '').trim().toLowerCase();
+        const eventRoom = String(data.sharedRoom || '').trim().toLowerCase();
+        const isSameRoom = Boolean(currentRoom && eventRoom && currentRoom === eventRoom);
+        if (!isAssociated && !isSameRoom) {
+          return;
+        }
       }
       if (data.count !== undefined) {
         setCounterCount(data.count);
@@ -560,6 +567,16 @@ export default function SecretSettings() {
       socket.off('widget_access_changed', handleAccessChanged);
     };
   }, [selectedWidget, status.userId, status.username, fetchSpotifyData, fetchStatusOverview]);
+
+  // Join Shared Counter Room when configured
+  useEffect(() => {
+    if (selectedWidget === 'custom-counter' && socket && fieldData.sharedRoom) {
+      const room = String(fieldData.sharedRoom).trim().toLowerCase();
+      if (room) {
+        socket.emit('join_counter_room', room);
+      }
+    }
+  }, [selectedWidget, fieldData.sharedRoom]);
 
   // Handle Field Value Change with Debounced Auto-Save
   const handleFieldChange = (key, value) => {
@@ -1977,6 +1994,80 @@ export default function SecretSettings() {
                           <div className="switch-pill-knob" />
                         </div>
                       </div>
+
+                      {/* 4. รหัสห้องร่วมกัน (Shared Room / Party Mode) */}
+                      <div style={{
+                        background: 'rgba(59, 130, 246, 0.06)',
+                        border: '1px solid rgba(59, 130, 246, 0.25)',
+                        borderRadius: 'var(--radius-md)',
+                        padding: '0.85rem'
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem', flexWrap: 'wrap', gap: '0.4rem' }}>
+                          <label style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                            <Users size={15} color="#3b82f6" />
+                            <span>รหัสห้องร่วมกัน (Shared Room / Party Mode)</span>
+                          </label>
+                          {fieldData.sharedRoom ? (
+                            <span style={{ fontSize: '0.72rem', background: '#3b82f6', color: '#fff', padding: '0.15rem 0.5rem', borderRadius: '9999px', fontWeight: 700 }}>
+                              ใช้งานห้องร่วมกัน
+                            </span>
+                          ) : (
+                            <span style={{ fontSize: '0.72rem', background: 'var(--surface-input)', color: 'var(--text-muted)', padding: '0.15rem 0.5rem', borderRadius: '9999px', fontWeight: 600 }}>
+                              นับคนเดียว (ส่วนตัว)
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ display: 'flex', gap: '0.45rem', alignItems: 'center' }}>
+                          <input
+                            type="text"
+                            value={fieldData.sharedRoom !== undefined ? fieldData.sharedRoom : ''}
+                            placeholder="เช่น dbd-party หรือ door-123 (เว้นว่าง = นับคนเดียว)"
+                            onChange={e => handleFieldChange('sharedRoom', e.target.value.trim().toLowerCase())}
+                            style={{
+                              flex: 1,
+                              background: 'var(--surface-input)',
+                              border: '1px solid var(--border-primary)',
+                              padding: '0.55rem 0.85rem',
+                              borderRadius: 'var(--radius-md)',
+                              fontSize: '0.88rem',
+                              fontFamily: 'monospace',
+                              fontWeight: 700,
+                              color: 'var(--accent-color)'
+                            }}
+                          />
+                          <button
+                            type="button"
+                            className="btn-island"
+                            onClick={() => {
+                              const rand = 'party-' + Math.random().toString(36).substring(2, 6);
+                              handleFieldChange('sharedRoom', rand);
+                            }}
+                            title="สุ่มรหัสห้องใหม่"
+                            style={{ padding: '0.55rem 0.75rem', fontSize: '0.8rem', whiteSpace: 'nowrap', fontWeight: 600 }}
+                          >
+                            <RefreshCw size={13} style={{ marginRight: '0.3rem' }} />
+                            <span>สุ่มรหัส</span>
+                          </button>
+                          {fieldData.sharedRoom && (
+                            <button
+                              type="button"
+                              className="btn-island"
+                              onClick={() => {
+                                navigator.clipboard.writeText(fieldData.sharedRoom);
+                                alert('คัดลอกรหัสห้องแล้ว: ' + fieldData.sharedRoom);
+                              }}
+                              title="คัดลอกรหัสห้องเพื่อส่งให้เพื่อน"
+                              style={{ padding: '0.55rem 0.75rem', fontSize: '0.8rem', whiteSpace: 'nowrap', fontWeight: 600 }}
+                            >
+                              <Copy size={13} style={{ marginRight: '0.3rem' }} />
+                              <span>คัดลอก</span>
+                            </button>
+                          )}
+                        </div>
+                        <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.35rem', lineHeight: 1.4 }}>
+                          แชร์รหัสนี้ให้เพื่อนร่วมตี้ใช้เหมือนกัน เพื่อให้นับสถิติตัวเดียวกันแบบ Real-time ทุกคนจะเห็นตัวเลขตรงกันทันที ไม่ว่าจะกดปุ่มบนเว็บ หรือพิมพ์คำสั่งในแชท Twitch ของใครก็ตาม (เว้นว่างไว้หากต้องการนับคนเดียว)
+                        </span>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -3136,6 +3227,23 @@ export default function SecretSettings() {
                   <div className="setting-card">
                     <h4 className="setting-card-title">แผงควบคุมยอดสถิติ Real-Time</h4>
                     <p className="setting-card-desc">คลิกเพื่อเพิ่มลดคะแนน หรือทดสอบขึ้นจอ OBS ทันที</p>
+                    {fieldData.sharedRoom && (
+                      <div style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        background: 'rgba(59, 130, 246, 0.15)',
+                        border: '1px solid rgba(59, 130, 246, 0.3)',
+                        borderRadius: '9999px',
+                        padding: '0.25rem 0.75rem',
+                        marginTop: '0.4rem'
+                      }}>
+                        <Users size={13} color="#60a5fa" />
+                        <span style={{ fontSize: '0.76rem', color: '#60a5fa', fontWeight: 700 }}>
+                          ห้องร่วมกัน: {fieldData.sharedRoom}
+                        </span>
+                      </div>
+                    )}
 
                     <div style={{
                       display: 'flex',

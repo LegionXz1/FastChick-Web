@@ -6,6 +6,7 @@ let unitText = 'ครั้ง';
 let soundEnabled = true;
 let soundVolume = 70;
 let customSoundUrl = '';
+let currentSharedRoom = '';
 
 const ICON_MAP = {
   ghost: '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 10h.01"/><path d="M15 10h.01"/><path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z"/></svg>',
@@ -92,6 +93,16 @@ function playCustomSound(isPositive) {
 
 function applySettings(fieldData) {
   if (!fieldData) return;
+
+  if (fieldData.sharedRoom !== undefined) {
+    const newRoom = String(fieldData.sharedRoom || '').trim().toLowerCase();
+    if (newRoom !== currentSharedRoom) {
+      currentSharedRoom = newRoom;
+      if (typeof socket !== 'undefined' && currentSharedRoom) {
+        socket.emit('join_counter_room', currentSharedRoom);
+      }
+    }
+  }
 
   if (fieldData.counterTitle !== undefined) {
     counterTitle = String(fieldData.counterTitle);
@@ -278,7 +289,9 @@ window.addEventListener('onEventReceived', function (obj) {
     const data = detail.event?.data || detail.data || {};
     const currentTarget = String(getWidgetTargetUser() || '').trim().toLowerCase().replace(/^@/, '');
     const eventUserId = String(detail.event?.userId || data.userId || detail.userId || '').trim().toLowerCase().replace(/^@/, '');
-    if (currentTarget && eventUserId && eventUserId !== currentTarget) {
+    const eventRoom = String(data.sharedRoom || detail.sharedRoom || '').trim().toLowerCase();
+    const isRoomMatch = Boolean(currentSharedRoom && eventRoom && currentSharedRoom === eventRoom);
+    if (!isRoomMatch && currentTarget && eventUserId && eventUserId !== currentTarget) {
       const associated = detail.associatedUserIds || data.associatedUserIds || detail.event?.associatedUserIds || [];
       const isMatch = Array.isArray(associated) && associated.some(id => String(id || '').trim().toLowerCase().replace(/^@/, '') === currentTarget);
       if (!isMatch) return;
@@ -297,11 +310,19 @@ window.addEventListener('onEventReceived', function (obj) {
 
 // Direct Socket.io listener via Solocast Adapter
 if (typeof socket !== 'undefined') {
+  socket.on('connect', function () {
+    if (currentSharedRoom) {
+      socket.emit('join_counter_room', currentSharedRoom);
+    }
+  });
+
   socket.on('counter_updated', function (data) {
     if (!data) return;
     const currentTarget = String(getWidgetTargetUser() || '').trim().toLowerCase().replace(/^@/, '');
     const eventUserId = String(data.userId || '').trim().toLowerCase().replace(/^@/, '');
-    if (currentTarget && eventUserId && eventUserId !== currentTarget) {
+    const eventRoom = String(data.sharedRoom || '').trim().toLowerCase();
+    const isRoomMatch = Boolean(currentSharedRoom && eventRoom && currentSharedRoom === eventRoom);
+    if (!isRoomMatch && currentTarget && eventUserId && eventUserId !== currentTarget) {
       const associated = data.associatedUserIds || [];
       const isMatch = Array.isArray(associated) && associated.some(id => String(id || '').trim().toLowerCase().replace(/^@/, '') === currentTarget);
       if (!isMatch) return;

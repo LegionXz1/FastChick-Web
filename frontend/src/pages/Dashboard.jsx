@@ -709,8 +709,15 @@ function Dashboard() {
 
     const handleCounterUpdated = (data) => {
       if (!data) return;
-      if (status.userId && data.userId && String(data.userId).toLowerCase() !== String(status.userId).toLowerCase()) {
-        return;
+      const myId = String(status.userId || status.username || '').toLowerCase();
+      if (myId && data.userId && String(data.userId).toLowerCase() !== myId) {
+        const isAssociated = Array.isArray(data.associatedUserIds) && data.associatedUserIds.some(id => String(id).toLowerCase() === myId);
+        const currentRoom = String(fieldData.sharedRoom || '').trim().toLowerCase();
+        const eventRoom = String(data.sharedRoom || '').trim().toLowerCase();
+        const isSameRoom = Boolean(currentRoom && eventRoom && currentRoom === eventRoom);
+        if (!isAssociated && !isSameRoom) {
+          return;
+        }
       }
       if (data.count !== undefined) {
         setCounterCount(data.count);
@@ -792,6 +799,16 @@ function Dashboard() {
       console.error('Error updating scoreboard:', e);
     }
   };
+
+  // Join Shared Counter Room when configured
+  useEffect(() => {
+    if (selectedWidget === 'custom-counter' && socket && fieldData.sharedRoom) {
+      const room = String(fieldData.sharedRoom).trim().toLowerCase();
+      if (room) {
+        socket.emit('join_counter_room', room);
+      }
+    }
+  }, [selectedWidget, fieldData.sharedRoom]);
 
   // โหลดค่าสถิติเริ่มต้นของ Custom Counter
   useEffect(() => {
@@ -2749,17 +2766,35 @@ function Dashboard() {
                                       </span>
                                     </div>
                                   </div>
-                                  <div style={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '0.5rem',
-                                    background: 'rgba(245, 158, 11, 0.15)',
-                                    border: '1px solid rgba(245, 158, 11, 0.3)',
-                                    borderRadius: '9999px',
-                                    padding: '0.3rem 0.85rem'
-                                  }}>
-                                    <span style={{ fontSize: '0.78rem', color: '#f59e0b', fontWeight: 700 }}>คำสั่งแชท:</span>
-                                    <code style={{ fontSize: '0.8rem', color: 'var(--text-primary)', fontWeight: 800 }}>{fieldData.commandPrefix || '!count'}</code>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                    {fieldData.sharedRoom && (
+                                      <div style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.4rem',
+                                        background: 'rgba(59, 130, 246, 0.15)',
+                                        border: '1px solid rgba(59, 130, 246, 0.3)',
+                                        borderRadius: '9999px',
+                                        padding: '0.3rem 0.85rem'
+                                      }}>
+                                        <Users size={14} color="#60a5fa" />
+                                        <span style={{ fontSize: '0.78rem', color: '#60a5fa', fontWeight: 700 }}>
+                                          ห้องร่วมกัน: {fieldData.sharedRoom}
+                                        </span>
+                                      </div>
+                                    )}
+                                    <div style={{
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '0.5rem',
+                                      background: 'rgba(245, 158, 11, 0.15)',
+                                      border: '1px solid rgba(245, 158, 11, 0.3)',
+                                      borderRadius: '9999px',
+                                      padding: '0.3rem 0.85rem'
+                                    }}>
+                                      <span style={{ fontSize: '0.78rem', color: '#f59e0b', fontWeight: 700 }}>คำสั่งแชท:</span>
+                                      <code style={{ fontSize: '0.8rem', color: 'var(--text-primary)', fontWeight: 800 }}>{fieldData.commandPrefix || '!count'}</code>
+                                    </div>
                                   </div>
                                 </div>
 
