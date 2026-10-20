@@ -4358,9 +4358,8 @@ async function processChatMessage(userId, e) {
         if (!subCmd) {
           if (counterSettings.enableChatReply !== false) {
             try {
-              const roomTag = sharedRoom ? ` (ห้อง: ${sharedRoom})` : '';
               await apiClient?.asUser(userId, async (ctx) => {
-                await ctx.chat.sendChatMessage(userId, `@${displayName} สถิติปัจจุบัน [${title}]${roomTag}: ${currentVal} ${unit}`);
+                await ctx.chat.sendChatMessage(userId, `@${displayName} สถิติปัจจุบัน [${title}]: ${currentVal} ${unit}`);
               });
             } catch (_) {}
           }
@@ -4413,13 +4412,13 @@ async function processChatMessage(userId, e) {
         if (counterSettings.enableChatReply !== false) {
           try {
             let replyTpl = counterSettings.chatReplyTemplate || '{user} อัปเดต {title} เป็น {count} {unit} แล้ว!';
-            const roomNotice = result.sharedRoom ? ` [ห้อง ${result.sharedRoom}]` : '';
             replyTpl = replyTpl
               .replace('{user}', `@${displayName}`)
               .replace('{title}', result.title || title)
               .replace('{count}', result.count)
               .replace('{unit}', unit)
-              .replace('{delta}', result.delta >= 0 ? `+${result.delta}` : `${result.delta}`) + roomNotice;
+              .replace('{room}', result.sharedRoom || '')
+              .replace('{delta}', result.delta >= 0 ? `+${result.delta}` : `${result.delta}`);
             await apiClient?.asUser(userId, async (ctx) => {
               await ctx.chat.sendChatMessage(userId, replyTpl);
             });
