@@ -1258,13 +1258,17 @@ app.post('/api/widgets/:id/settings', (req, res) => {
     };
 
     // สำหรับ custom-counter: ตรวจสอบและซิงค์ห้องร่วมกัน (Shared Room)
+    let prevCounterRoom = '';
+    let newCounterRoom = '';
     if (widgetId === 'custom-counter') {
+      prevCounterRoom = normalizeRoomCode(widgetSettingsStore[widgetId]?.[userKey]?.sharedRoom);
       const currentCS = widgetSettingsStore[widgetId][userKey];
-      const roomCode = normalizeRoomCode(currentCS?.sharedRoom);
-      if (roomCode) {
-        if (!sharedCounterRoomsStore[roomCode]) {
-          sharedCounterRoomsStore[roomCode] = {
-            roomCode,
+      newCounterRoom = normalizeRoomCode(currentCS?.sharedRoom);
+      if (newCounterRoom) {
+        if (!sharedCounterRoomsStore[newCounterRoom]) {
+          sharedCounterRoomsStore[newCounterRoom] = {
+            roomCode: newCounterRoom,
+            creator: userKey,
             count: Number(currentCS.currentCount) || 0,
             title: currentCS.counterTitle || 'ได้ออกประตู',
             updatedAt: Date.now(),
@@ -1272,7 +1276,7 @@ app.post('/api/widgets/:id/settings', (req, res) => {
           };
           saveSharedCounterRooms();
         } else {
-          currentCS.currentCount = Number(sharedCounterRoomsStore[roomCode].count) || 0;
+          currentCS.currentCount = Number(sharedCounterRoomsStore[newCounterRoom].count) || 0;
         }
       }
     }
@@ -1283,6 +1287,15 @@ app.post('/api/widgets/:id/settings', (req, res) => {
     }
 
     saveWidgetSettings(widgetSettingsStore);
+
+    if (widgetId === 'custom-counter') {
+      if (prevCounterRoom && prevCounterRoom !== newCounterRoom) {
+        broadcastCounterRoomMembers(prevCounterRoom);
+      }
+      if (newCounterRoom) {
+        broadcastCounterRoomMembers(newCounterRoom);
+      }
+    }
 
     // ส่งสัญญาณ Real-time ไปเฉพาะห้องของ User คนนี้เท่านั้น (OBS ของคนอื่นจะไม่ได้รับ)
     if (user) {
@@ -1390,6 +1403,107 @@ function getCounterSharedRoom(userId) {
   }
   const room = normalizeRoomCode(cs?.sharedRoom);
   return room || null;
+}
+
+function getUserInfo(userId) {
+  if (!userId) return { userId: 'unknown', username: 'Unknown', displayName: 'Unknown', avatar: '' };
+  const uid = String(userId).trim().toLowerCase().replace(/^@/, '');
+  let username = uid;
+  let displayName = uid;
+
+  // 1. ตรวจสอบจาก Sessions ล่าสุด
+  for (const s of Object.values(sessions)) {
+    if (s && String(s.userId).toLowerCase() === uid) {
+      username = s.username || username;
+      displayName = s.displayName || username;
+      break;
+    }
+  }
+
+  // 2. ตรวจสอบจาก userTokens
+  if (typeof userTokens !== 'undefined' && userTokens[uid]) {
+    username = userTokens[uid].username || userTokens[uid].login || username;
+    displayName = userTokens[uid].displayName || username;
+  }
+
+  // 3. กรณีค้นหาด้วย Username ใน Sessions
+  if (username === uid) {
+    for (const s of Object.values(sessions)) {
+      if (s && String(s.username || '').toLowerCase() === uid) {
+        username = s.username;
+        displayName = s.displayName || username;
+        break;
+      }
+    }
+  }
+
+  return {
+    userId: uid,
+    username,
+    displayName,
+    avatar: `/api/twitch/avatar/${encodeURIComponent(username)}`
+  };
+}
+
+function getCounterRoomMembers(roomCode) {
+  const norm = normalizeRoomCode(roomCode);
+  if (!norm) return [];
+  const uids = getUsersInCounterRoom(norm);
+  const roomData = sharedCounterRoomsStore[norm] || {};
+  const creator = String(roomData.creator || roomData.updatedBy || '').trim().toLowerCase();
+
+  const members = [];
+  const seenUsers = new Set();
+
+  for (const uid of uids) {
+    const clean = String(uid).trim().toLowerCase().replace(/^@/, '');
+    if (clean === 'default' || seenUsers.has(clean)) continue;
+    seenUsers.add(clean);
+
+    const info = getUserInfo(uid);
+    members.push({
+      userId: info.userId,
+      username: info.username,
+      displayName: info.displayName,
+      avatar: info.avatar,
+      isCreator: Boolean(creator && (creator === info.userId || creator === info.username.toLowerCase()))
+    });
+  }
+
+  if (creator && !seenUsers.has(creator)) {
+    const info = getUserInfo(creator);
+    if (info.username !== 'system' && info.username !== 'unknown') {
+      seenUsers.add(creator);
+      members.unshift({
+        userId: info.userId,
+        username: info.username,
+        displayName: info.displayName,
+        avatar: info.avatar,
+        isCreator: true
+      });
+    }
+  }
+
+  return members;
+}
+
+function broadcastCounterRoomMembers(roomCode) {
+  const norm = normalizeRoomCode(roomCode);
+  if (!norm) return;
+  const members = getCounterRoomMembers(norm);
+  const payload = {
+    roomCode: norm,
+    members,
+    count: sharedCounterRoomsStore[norm]?.count ?? 0,
+    title: sharedCounterRoomsStore[norm]?.title ?? ''
+  };
+
+  io.to('counter_room_' + norm).emit('counter_room_members_updated', payload);
+
+  const usersInRoom = getUsersInCounterRoom(norm);
+  for (const u of usersInRoom) {
+    emitToUser(u, 'counter_room_members_updated', payload);
+  }
 }
 
 function getUsersInCounterRoom(roomCode) {
@@ -1597,15 +1711,40 @@ app.get('/api/widgets/custom-counter/data', (req, res) => {
       count = Number(sharedCounterRoomsStore[roomCode].count) || 0;
     }
 
+    const roomMembers = roomCode ? getCounterRoomMembers(roomCode) : [];
     res.json({
       count,
       title: settings.counterTitle || 'ได้ออกประตู',
       unit: settings.unitText || 'ครั้ง',
       sharedRoom: roomCode || null,
+      members: roomMembers,
       settings: {
         ...settings,
         currentCount: count
       }
+    });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.get('/api/widgets/custom-counter/members', (req, res) => {
+  try {
+    const user = req.query.user || req.query.channel;
+    let room = req.query.room;
+    if (!room && user) {
+      room = getCounterSharedRoom(user);
+    }
+    const norm = normalizeRoomCode(room);
+    if (!norm) {
+      return res.json({ roomCode: '', count: 0, members: [] });
+    }
+    const members = getCounterRoomMembers(norm);
+    const count = sharedCounterRoomsStore[norm]?.count ?? 0;
+    res.json({
+      roomCode: norm,
+      count,
+      members
     });
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -5266,6 +5405,26 @@ io.on('connection', (socket) => {
     const clean = normalizeRoomCode(roomCode);
     if (clean) {
       socket.join('counter_room_' + clean);
+      const members = getCounterRoomMembers(clean);
+      socket.emit('counter_room_members_updated', {
+        roomCode: clean,
+        members,
+        count: sharedCounterRoomsStore[clean]?.count ?? 0,
+        title: sharedCounterRoomsStore[clean]?.title ?? ''
+      });
+    }
+  });
+
+  socket.on('get_counter_room_members', (roomCode) => {
+    const clean = normalizeRoomCode(roomCode);
+    if (clean) {
+      const members = getCounterRoomMembers(clean);
+      socket.emit('counter_room_members_updated', {
+        roomCode: clean,
+        members,
+        count: sharedCounterRoomsStore[clean]?.count ?? 0,
+        title: sharedCounterRoomsStore[clean]?.title ?? ''
+      });
     }
   });
 

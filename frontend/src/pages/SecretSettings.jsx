@@ -268,6 +268,7 @@ export default function SecretSettings() {
   const [joinInputCode, setJoinInputCode] = useState('');
   const [createInputCode, setCreateInputCode] = useState(() => 'party-' + Math.random().toString(36).substring(2, 6));
   const [copiedRoom, setCopiedRoom] = useState(false);
+  const [roomMembers, setRoomMembers] = useState([]);
 
   // DBD Scoreboard State
   const [scoreboardData, setScoreboardData] = useState({ killerKills: 0, killerDraws: 0, killerEscapes: 0 });
@@ -554,7 +555,18 @@ export default function SecretSettings() {
     socket.on('spotify_now_playing', handleSpotifyNowPlaying);
     socket.on('spotify_queue_updated', handleSpotifyQueueUpdated);
     socket.on('spotify_new_request', handleSpotifyNewRequest);
+    const handleRoomMembersUpdated = (data) => {
+      if (!data) return;
+      const currentRoom = String(fieldData.sharedRoom || '').trim().toLowerCase();
+      if (currentRoom && data.roomCode && data.roomCode.toLowerCase() === currentRoom.toLowerCase()) {
+        if (Array.isArray(data.members)) {
+          setRoomMembers(data.members);
+        }
+      }
+    };
+
     socket.on('counter_updated', handleCounterUpdated);
+    socket.on('counter_room_members_updated', handleRoomMembersUpdated);
     socket.on('dbd_scoreboard_updated', handleScoreboardUpdated);
     socket.on('widget_status_updated', handleWidgetStatusUpdated);
     socket.on('widget_access_changed', handleAccessChanged);
@@ -567,19 +579,30 @@ export default function SecretSettings() {
       socket.off('spotify_queue_updated', handleSpotifyQueueUpdated);
       socket.off('spotify_new_request', handleSpotifyNewRequest);
       socket.off('counter_updated', handleCounterUpdated);
+      socket.off('counter_room_members_updated', handleRoomMembersUpdated);
       socket.off('dbd_scoreboard_updated', handleScoreboardUpdated);
       socket.off('widget_status_updated', handleWidgetStatusUpdated);
       socket.off('widget_access_changed', handleAccessChanged);
     };
   }, [selectedWidget, status.userId, status.username, fetchSpotifyData, fetchStatusOverview]);
 
-  // Join Shared Counter Room when configured
+  // Join Shared Counter Room and fetch members when configured
   useEffect(() => {
-    if (selectedWidget === 'custom-counter' && socket && fieldData.sharedRoom) {
+    if (selectedWidget === 'custom-counter' && fieldData.sharedRoom) {
       const room = String(fieldData.sharedRoom).trim().toLowerCase();
       if (room) {
-        socket.emit('join_counter_room', room);
+        if (socket) socket.emit('join_counter_room', room);
+        fetch(`${API_BASE}/api/widgets/custom-counter/members?room=${encodeURIComponent(room)}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data && Array.isArray(data.members)) {
+              setRoomMembers(data.members);
+            }
+          })
+          .catch(() => {});
       }
+    } else {
+      setRoomMembers([]);
     }
   }, [selectedWidget, fieldData.sharedRoom]);
 
@@ -2080,6 +2103,117 @@ export default function SecretSettings() {
                                 <LogOut size={14} />
                                 <span>ออกจากห้อง</span>
                               </button>
+                            </div>
+                          </div>
+
+                          {/* รายชื่อสมาชิกในห้อง */}
+                          <div style={{
+                            background: 'var(--surface-1)',
+                            border: '1px solid var(--border-primary)',
+                            borderRadius: 'var(--radius-md)',
+                            padding: '0.85rem',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0.6rem'
+                          }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                                <Users size={15} color="#3b82f6" />
+                                <span style={{ fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                                  สมาชิกในห้อง ({roomMembers.length || 1} คน)
+                                </span>
+                              </div>
+                              <span style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
+                                ซิงค์ Real-Time
+                              </span>
+                            </div>
+
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                              {roomMembers.length > 0 ? (
+                                roomMembers.map((m, idx) => {
+                                  const isMe = String(status.userId || status.username || '').toLowerCase() === String(m.userId || m.username || '').toLowerCase();
+                                  return (
+                                    <div
+                                      key={m.userId || m.username || idx}
+                                      style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        padding: '0.45rem 0.65rem',
+                                        background: isMe ? 'rgba(59, 130, 246, 0.08)' : 'var(--surface-2)',
+                                        border: isMe ? '1px solid rgba(59, 130, 246, 0.3)' : '1px solid var(--border-subtle)',
+                                        borderRadius: 'var(--radius-sm)'
+                                      }}
+                                    >
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                                        <div style={{
+                                          width: '28px',
+                                          height: '28px',
+                                          borderRadius: '50%',
+                                          overflow: 'hidden',
+                                          background: 'var(--surface-input)',
+                                          border: '1px solid var(--border-primary)',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          flexShrink: 0
+                                        }}>
+                                          {m.avatar ? (
+                                            <img
+                                              src={m.avatar}
+                                              alt={m.displayName || m.username}
+                                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                            />
+                                          ) : (
+                                            <Users size={13} color="var(--text-muted)" />
+                                          )}
+                                        </div>
+                                        <div>
+                                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                            <span style={{ fontSize: '0.84rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                                              {m.displayName || m.username}
+                                            </span>
+                                            {isMe && (
+                                              <span style={{ fontSize: '0.66rem', background: '#3b82f6', color: '#fff', padding: '0.1rem 0.4rem', borderRadius: '9999px', fontWeight: 700 }}>
+                                                คุณ
+                                              </span>
+                                            )}
+                                            {m.isCreator && (
+                                              <span style={{ fontSize: '0.66rem', background: 'rgba(245, 158, 11, 0.2)', color: '#f59e0b', border: '1px solid rgba(245, 158, 11, 0.35)', padding: '0.1rem 0.4rem', borderRadius: '9999px', fontWeight: 700 }}>
+                                                หัวห้อง
+                                              </span>
+                                            )}
+                                          </div>
+                                          {m.displayName && m.username && m.displayName.toLowerCase() !== m.username.toLowerCase() && (
+                                            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+                                              @{m.username}
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
+
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                                        <span style={{
+                                          fontSize: '0.7rem',
+                                          color: '#34d399',
+                                          background: 'rgba(16, 185, 129, 0.1)',
+                                          padding: '0.15rem 0.45rem',
+                                          borderRadius: '4px',
+                                          fontWeight: 600
+                                        }}>
+                                          ออนไลน์
+                                        </span>
+                                      </div>
+                                    </div>
+                                  );
+                                })
+                              ) : (
+                                <div style={{ textAlign: 'center', padding: '0.6rem', color: 'var(--text-muted)', fontSize: '0.76rem' }}>
+                                  ยังไม่มีเพื่อนคนอื่นเข้าร่วม ส่งรหัสห้องให้เพื่อนเพื่อเริ่มนับด้วยกันได้เลย
+                                </div>
+                              )}
                             </div>
                           </div>
 

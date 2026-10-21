@@ -309,6 +309,7 @@ function Dashboard() {
   // Custom Counter State
   const [counterCount, setCounterCount] = useState(0);
   const [counterCustomInput, setCounterCustomInput] = useState('');
+  const [roomMembers, setRoomMembers] = useState([]);
 
   // DBD Scoreboard State
   const [scoreboardData, setScoreboardData] = useState({ killerKills: 0, killerDraws: 0, killerEscapes: 0 });
@@ -746,7 +747,18 @@ function Dashboard() {
     socket.on('spotify_now_playing', handleSpotifyNowPlaying);
     socket.on('spotify_queue_updated', handleSpotifyQueueUpdated);
     socket.on('spotify_new_request', handleSpotifyNewRequest);
+    const handleRoomMembersUpdated = (data) => {
+      if (!data) return;
+      const currentRoom = String(fieldData.sharedRoom || '').trim().toLowerCase();
+      if (currentRoom && data.roomCode && data.roomCode.toLowerCase() === currentRoom.toLowerCase()) {
+        if (Array.isArray(data.members)) {
+          setRoomMembers(data.members);
+        }
+      }
+    };
+
     socket.on('counter_updated', handleCounterUpdated);
+    socket.on('counter_room_members_updated', handleRoomMembersUpdated);
     socket.on('dbd_scoreboard_updated', handleScoreboardUpdated);
 
     return () => {
@@ -758,6 +770,7 @@ function Dashboard() {
       socket.off('spotify_queue_updated', handleSpotifyQueueUpdated);
       socket.off('spotify_new_request', handleSpotifyNewRequest);
       socket.off('counter_updated', handleCounterUpdated);
+      socket.off('counter_room_members_updated', handleRoomMembersUpdated);
       socket.off('dbd_scoreboard_updated', handleScoreboardUpdated);
     };
   }, [selectedWidget, status.userId, fetchSpotifyData]);
@@ -800,13 +813,23 @@ function Dashboard() {
     }
   };
 
-  // Join Shared Counter Room when configured
+  // Join Shared Counter Room and fetch members when configured
   useEffect(() => {
-    if (selectedWidget === 'custom-counter' && socket && fieldData.sharedRoom) {
+    if (selectedWidget === 'custom-counter' && fieldData.sharedRoom) {
       const room = String(fieldData.sharedRoom).trim().toLowerCase();
       if (room) {
-        socket.emit('join_counter_room', room);
+        if (socket) socket.emit('join_counter_room', room);
+        fetch(`${API_BASE}/api/widgets/custom-counter/members?room=${encodeURIComponent(room)}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data && Array.isArray(data.members)) {
+              setRoomMembers(data.members);
+            }
+          })
+          .catch(() => {});
       }
+    } else {
+      setRoomMembers([]);
     }
   }, [selectedWidget, fieldData.sharedRoom]);
 
@@ -2830,6 +2853,85 @@ function Dashboard() {
                                     </div>
                                   </div>
                                 </div>
+
+                                {/* แสดงสมาชิกในห้อง Party Mode */}
+                                {fieldData.sharedRoom && (
+                                  <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    flexWrap: 'wrap',
+                                    gap: '0.5rem',
+                                    background: 'rgba(59, 130, 246, 0.08)',
+                                    border: '1px solid rgba(59, 130, 246, 0.25)',
+                                    borderRadius: '10px',
+                                    padding: '0.55rem 0.85rem',
+                                    marginBottom: '1rem'
+                                  }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                      <Users size={14} color="#60a5fa" />
+                                      <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#93c5fd' }}>
+                                        สมาชิกในห้อง ({roomMembers.length || 1} คน):
+                                      </span>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexWrap: 'wrap' }}>
+                                        {roomMembers.map((m, idx) => {
+                                          const isMe = String(status.userId || status.username || '').toLowerCase() === String(m.userId || m.username || '').toLowerCase();
+                                          return (
+                                            <div
+                                              key={m.userId || m.username || idx}
+                                              style={{
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '0.35rem',
+                                                background: isMe ? 'rgba(59, 130, 246, 0.25)' : 'rgba(15, 23, 42, 0.6)',
+                                                border: isMe ? '1px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.1)',
+                                                borderRadius: '9999px',
+                                                padding: '0.15rem 0.5rem 0.15rem 0.2rem'
+                                              }}
+                                            >
+                                              <div style={{
+                                                width: '18px',
+                                                height: '18px',
+                                                borderRadius: '50%',
+                                                overflow: 'hidden',
+                                                background: '#3b82f6',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                flexShrink: 0
+                                              }}>
+                                                {m.avatar ? (
+                                                  <img
+                                                    src={m.avatar}
+                                                    alt={m.displayName || m.username}
+                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                                  />
+                                                ) : (
+                                                  <Users size={10} color="#fff" />
+                                                )}
+                                              </div>
+                                              <span style={{ fontSize: '0.74rem', color: 'var(--text-primary)', fontWeight: 700 }}>
+                                                {m.displayName || m.username}
+                                              </span>
+                                              {isMe && (
+                                                <span style={{ fontSize: '0.62rem', background: '#3b82f6', color: '#fff', padding: '0.05rem 0.3rem', borderRadius: '9999px', fontWeight: 800 }}>
+                                                  คุณ
+                                                </span>
+                                              )}
+                                              {m.isCreator && (
+                                                <span style={{ fontSize: '0.62rem', color: '#f59e0b', fontWeight: 800 }}>★ หัวห้อง</span>
+                                              )}
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                    <span style={{ fontSize: '0.7rem', color: '#34d399', fontWeight: 600 }}>
+                                      ซิงค์ Real-Time
+                                    </span>
+                                  </div>
+                                )}
 
                                 {/* Counter Big Display & Quick Stepper */}
                                 <div style={{
