@@ -1367,18 +1367,43 @@ function loadSharedCounterRooms() {
   return {};
 }
 
+let saveSharedCounterRoomsTimer = null;
 function saveSharedCounterRooms(data = sharedCounterRoomsStore) {
-  try {
-    const dir = path.dirname(SHARED_COUNTER_ROOMS_FILE);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(SHARED_COUNTER_ROOMS_FILE, JSON.stringify(data, null, 2), 'utf8');
-  } catch (e) { }
-  try {
-    if (typeof saveAllItems === 'function') {
-      saveAllItems('shared_counter_rooms', data);
-    }
-  } catch (_) { }
+  if (saveSharedCounterRoomsTimer) clearTimeout(saveSharedCounterRoomsTimer);
+  saveSharedCounterRoomsTimer = setTimeout(() => {
+    try {
+      const dir = path.dirname(SHARED_COUNTER_ROOMS_FILE);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(SHARED_COUNTER_ROOMS_FILE, JSON.stringify(data, null, 2), 'utf8');
+    } catch (e) { }
+    try {
+      if (typeof saveAllItems === 'function') {
+        saveAllItems('shared_counter_rooms', data);
+      }
+    } catch (_) { }
+  }, 300);
 }
+
+function cleanupStaleCounterRooms() {
+  try {
+    const now = Date.now();
+    const MAX_STALE_MS = 30 * 24 * 60 * 60 * 1000;
+    let changed = false;
+    for (const [code, rData] of Object.entries(sharedCounterRoomsStore)) {
+      const usersInRoom = getUsersInCounterRoom(code);
+      if (usersInRoom.length === 0) {
+        const lastUpdated = rData?.updatedAt || 0;
+        if (now - lastUpdated > MAX_STALE_MS) {
+          delete sharedCounterRoomsStore[code];
+          changed = true;
+        }
+      }
+    }
+    if (changed) saveSharedCounterRooms();
+  } catch (_) {}
+}
+
+const counterQueryCooldownStore = {};
 
 const sharedCounterRoomsStore = loadSharedCounterRooms();
 
@@ -1551,7 +1576,7 @@ function applyCounterUpdate({ userKey, action, delta, value, updatedBy }) {
   }
 
   const roomCode = normalizeRoomCode(cs.sharedRoom);
-  const step = Number(cs.stepAmount) || 1;
+  const step = Math.max(1, Math.min(100000, Number(cs.stepAmount) || 1));
   const title = cs.counterTitle || 'ได้ออกประตู';
 
   let currentCount = 0;
@@ -1559,31 +1584,34 @@ function applyCounterUpdate({ userKey, action, delta, value, updatedBy }) {
     if (!sharedCounterRoomsStore[roomCode]) {
       sharedCounterRoomsStore[roomCode] = {
         roomCode,
-        count: Number(cs.currentCount) || 0,
+        count: Math.max(0, Math.min(9999999, Number(cs.currentCount) || 0)),
         title,
         updatedAt: Date.now(),
         updatedBy: updatedBy || 'System'
       };
       saveSharedCounterRooms();
     }
-    currentCount = Number(sharedCounterRoomsStore[roomCode].count) || 0;
+    currentCount = Math.max(0, Math.min(9999999, Number(sharedCounterRoomsStore[roomCode].count) || 0));
   } else {
-    currentCount = Number(cs.currentCount) || 0;
+    currentCount = Math.max(0, Math.min(9999999, Number(cs.currentCount) || 0));
   }
 
   let newCount = currentCount;
   let computedDelta = 0;
 
   if (action === 'inc') {
-    const d = Number(delta !== undefined ? delta : step);
-    newCount = Math.max(0, currentCount + d);
+    const rawDelta = Number(delta);
+    const d = (!isNaN(rawDelta) && rawDelta > 0) ? rawDelta : step;
+    newCount = Math.min(9999999, Math.max(0, currentCount + d));
     computedDelta = newCount - currentCount;
   } else if (action === 'dec') {
-    const d = Number(delta !== undefined ? delta : step);
+    const rawDelta = Number(delta);
+    const d = (!isNaN(rawDelta) && rawDelta > 0) ? rawDelta : step;
     newCount = Math.max(0, currentCount - d);
     computedDelta = newCount - currentCount;
   } else if (action === 'set') {
-    newCount = Math.max(0, Number(value) || 0);
+    const rawVal = Number(value);
+    newCount = Math.min(9999999, Math.max(0, !isNaN(rawVal) ? rawVal : 0));
     computedDelta = newCount - currentCount;
   } else if (action === 'reset') {
     newCount = 0;
@@ -1640,7 +1668,7 @@ function applyCounterUpdate({ userKey, action, delta, value, updatedBy }) {
     updatedBy: updatedBy || 'Dashboard'
   };
 
-  // Broadcast to room channel
+  // Broadcast to recipients without double-emitting to sockets in both room and user channels
   if (roomCode) {
     io.to('counter_room_' + roomCode).emit('counter_updated', payload);
     io.to('counter_room_' + roomCode).emit('onEventReceived', {
@@ -1648,18 +1676,37 @@ function applyCounterUpdate({ userKey, action, delta, value, updatedBy }) {
       listener: 'counter_updated',
       data: payload
     });
-  }
 
-  // Broadcast to each user's room
-  for (const tu of targetUsers) {
-    emitToUser(tu, 'counter_updated', payload);
-    emitToUser(tu, 'onEventReceived', {
-      type: 'counter_update',
-      listener: 'counter_updated',
-      userId: tu,
-      associatedUserIds: associatedUserIdsList,
-      data: payload
-    });
+    const roomSockets = io.sockets.adapter.rooms.get('counter_room_' + roomCode);
+    for (const tu of targetUsers) {
+      const cleanTu = String(tu).trim().toLowerCase().replace('@', '');
+      const userSockets = io.sockets.adapter.rooms.get('user_' + cleanTu);
+      if (userSockets) {
+        for (const sockId of userSockets) {
+          if (!roomSockets || !roomSockets.has(sockId)) {
+            io.to(sockId).emit('counter_updated', payload);
+            io.to(sockId).emit('onEventReceived', {
+              type: 'counter_update',
+              listener: 'counter_updated',
+              userId: tu,
+              associatedUserIds: associatedUserIdsList,
+              data: payload
+            });
+          }
+        }
+      }
+    }
+  } else {
+    for (const tu of targetUsers) {
+      emitToUser(tu, 'counter_updated', payload);
+      emitToUser(tu, 'onEventReceived', {
+        type: 'counter_update',
+        listener: 'counter_updated',
+        userId: tu,
+        associatedUserIds: associatedUserIdsList,
+        data: payload
+      });
+    }
   }
 
   return {
@@ -4505,6 +4552,10 @@ async function processChatMessage(userId, e) {
           return;
         }
 
+        if (counterSettings.enableChatCmd === false || counterSettings.enableChatCmd === 'false') {
+          return;
+        }
+
         const isModOrBroadcaster = e.chatterId === userId || e.isBroadcaster || e.isMod ||
           (e.badges && (typeof e.badges.has === 'function' ? (e.badges.has('broadcaster') || e.badges.has('moderator')) : (e.badges.broadcaster || e.badges.moderator)));
         const permission = counterSettings.chatPermission || 'mods';
@@ -4534,9 +4585,15 @@ async function processChatMessage(userId, e) {
           currentVal = Number(sharedCounterRoomsStore[sharedRoom].count) || 0;
         }
 
-        // 1. ถ้าพิมพ์แค่ !count เพื่อดูยอดปัจจุบัน
+        // 1. ถ้าพิมพ์แค่ !count เพื่อดูยอดปัจจุบัน (มี Cooldown 3 วินาทีต่อช่องป้องกัน Spam)
         if (!subCmd) {
           if (counterSettings.enableChatReply !== false) {
+            const now = Date.now();
+            const lastView = counterQueryCooldownStore[userId] || 0;
+            if (now - lastView < 3000) {
+              return;
+            }
+            counterQueryCooldownStore[userId] = now;
             try {
               await apiClient?.asUser(userId, async (ctx) => {
                 await ctx.chat.sendChatMessage(userId, `@${displayName} สถิติปัจจุบัน [${title}]: ${currentVal} ${unit}`);

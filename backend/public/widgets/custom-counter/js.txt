@@ -222,7 +222,18 @@ function applySettings(fieldData) {
   }
 }
 
+let lastUpdateTimestamp = 0;
+let lastProcessedCount = null;
+
 function updateCounterDisplay(newCount, delta = 0) {
+  const num = Number(newCount);
+  const now = Date.now();
+  // Guard against duplicate event execution within 80ms for the exact same count
+  if (lastProcessedCount === num && (now - lastUpdateTimestamp < 80)) {
+    return;
+  }
+  lastUpdateTimestamp = now;
+  lastProcessedCount = num;
   const card = document.getElementById('counter-card');
   const valEl = document.getElementById('counter-value');
   const iconBox = document.getElementById('counter-icon-box');
