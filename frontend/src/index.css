@@ -3867,7 +3867,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   color: #f8fafc;
 }
 
-/* Clean 3-Column Grid for Minimalist Widget Cards */
+/* Grid Layouts for Minimalist and Classic Views */
 .my-overlays-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -3875,16 +3875,84 @@ input[type="range"]::-webkit-slider-thumb:hover {
   align-items: stretch;
 }
 
+.my-overlays-grid.view-minimal {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.my-overlays-grid.view-classic {
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+}
+
 @media (max-width: 960px) {
-  .my-overlays-grid {
+  .my-overlays-grid,
+  .my-overlays-grid.view-minimal {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 600px) {
-  .my-overlays-grid {
+  .my-overlays-grid,
+  .my-overlays-grid.view-minimal,
+  .my-overlays-grid.view-classic {
     grid-template-columns: 1fr;
   }
+}
+
+/* View Mode Switcher Toggle Group */
+.view-mode-toggle-group {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(17, 20, 28, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+  padding: 3px;
+  gap: 2px;
+  box-sizing: border-box;
+}
+
+.view-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: 1px solid transparent;
+  color: #94a3b8;
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 0.28rem 0.62rem;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.view-mode-btn:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.view-mode-btn.active {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.4);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="light"] .view-mode-toggle-group {
+  background: var(--surface-2);
+  border-color: var(--border-primary);
+}
+
+[data-theme="light"] .view-mode-btn {
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .view-mode-btn.active {
+  background: var(--surface-1);
+  color: var(--accent-color);
+  border-color: var(--border-secondary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 /* Base Overlay Card - Requirement 3: 3.5px Status Accent on Left Edge */
