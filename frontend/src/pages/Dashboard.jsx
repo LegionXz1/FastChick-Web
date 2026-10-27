@@ -1979,7 +1979,7 @@ function Dashboard() {
                     {/* Centered Body: Icon (Top) + Widget Name (Bottom) */}
                     <div className="minimal-card-body">
                       <div className="minimal-card-icon-box" style={{ background: meta.gradient }}>
-                        {React.isValidElement(meta.icon) ? React.cloneElement(meta.icon, { size: 32 }) : meta.icon}
+                        {React.isValidElement(meta.icon) ? React.cloneElement(meta.icon, { size: 48 }) : meta.icon}
                       </div>
 
                       <h3 className="minimal-card-title" title={w.name}>
