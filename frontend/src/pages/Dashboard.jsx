@@ -1873,31 +1873,15 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* Cards Grid */}
+          {/* Cards Grid - Minimalist Layout: Icon Top + Name Bottom */}
           {isWidgetsLoading ? (
             <div className="my-overlays-grid">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="overlay-card-skeleton">
-                  <div className="skeleton-top-row">
-                    <div className="skeleton-box skeleton-icon" />
-                    <div className="skeleton-title-group">
-                      <div className="skeleton-line skeleton-title" />
-                      <div className="skeleton-line skeleton-subtitle" />
-                    </div>
-                    <div className="skeleton-box skeleton-btn" />
-                  </div>
-                  <div className="skeleton-middle">
-                    <div className="skeleton-line skeleton-desc-1" />
-                    <div className="skeleton-line skeleton-desc-2" />
-                    <div className="skeleton-badges">
-                      <div className="skeleton-pill" />
-                      <div className="skeleton-pill short" />
-                    </div>
-                  </div>
-                  <div className="skeleton-footer">
-                    <div className="skeleton-box skeleton-footer-btn" />
-                    <div className="skeleton-box skeleton-footer-btn short" />
-                  </div>
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="overlay-card-skeleton minimal-layout">
+                  <div className="skeleton-box skeleton-icon-center" />
+                  <div className="skeleton-line skeleton-title-center" />
+                  <div className="skeleton-line skeleton-sub-center" />
+                  <div className="skeleton-box skeleton-btn-center" />
                 </div>
               ))}
             </div>
@@ -1911,7 +1895,7 @@ function Dashboard() {
             <div className="my-overlays-grid">
               {filteredWidgets.map((w) => {
                 const meta = WIDGET_META[w.id] || {
-                  icon: <Zap size={20} />,
+                  icon: <Zap size={24} />,
                   desc: w.id,
                   gradient: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
                   pattern: 'waves',
@@ -1930,78 +1914,13 @@ function Dashboard() {
                 return (
                   <div
                     key={w.id}
-                    className={`overlay-card ${wStatus.active ? 'is-active' : 'is-disabled'} ${!wStatus.hasAccess ? 'is-restricted' : ''}`}
+                    className={`overlay-card minimal-layout ${wStatus.active ? 'is-active' : 'is-disabled'} ${!wStatus.hasAccess ? 'is-restricted' : ''}`}
                     onClick={() => handleOpenWidget(w.id)}
+                    title={`คลิกเพื่อเปิดสตูดิโอตั้งค่า ${w.name}`}
                   >
-                    {/* Top Row: Icon + Title + Category + Controls */}
-                    <div className="clean-card-top-row">
-                      <div className="clean-card-icon-title-group">
-                        <div className="clean-card-icon-box" style={{ background: meta.gradient }}>
-                          {meta.icon}
-                        </div>
-                        <div className="clean-card-title-container">
-                          <h3 className="clean-card-title" title={w.name}>
-                            {w.name}
-                          </h3>
-                          <span className="clean-card-category-sub">
-                            {categoryLabel}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="clean-card-controls" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          type="button"
-                          className={`clean-card-fav-btn ${isFav ? 'is-fav' : ''}`}
-                          onClick={(e) => toggleFavorite(w.id, e)}
-                          title={isFav ? "นำออกจากรายการโปรด" : "เพิ่มเป็นรายการโปรด"}
-                        >
-                          <Star size={15} fill={isFav ? "#f59e0b" : "none"} stroke={isFav ? "#f59e0b" : "#94a3b8"} />
-                        </button>
-
-                        <button
-                          type="button"
-                          className={`clean-power-btn ${wStatus.active ? 'is-active' : 'is-inactive'} ${!wStatus.globalEnabled || !wStatus.hasAccess ? 'is-locked' : ''}`}
-                          disabled={!wStatus.globalEnabled || !wStatus.hasAccess || isUserToggleLoading}
-                          onClick={() => handleToggleUserWidget(w.id, wStatus.userEnabled)}
-                          title={
-                            !wStatus.hasAccess
-                              ? 'เฉพาะผู้ใช้ที่ได้รับอนุญาตจาก Admin'
-                              : !wStatus.globalEnabled
-                                ? 'แอดมินปิดปรับปรุงทั้งระบบ'
-                                : wStatus.userEnabled
-                                  ? 'เปิดอยู่ (คลิกเพื่อปิดใช้งานใน OBS)'
-                                  : 'ปิดอยู่ (คลิกเพื่อเปิดใช้งานใน OBS)'
-                          }
-                        >
-                          {isUserToggleLoading ? (
-                            <Loader2 size={12} className="spin" />
-                          ) : (
-                            <Power size={12} />
-                          )}
-                          <span>
-                            {!wStatus.hasAccess
-                              ? 'เฉพาะผู้มีสิทธิ์'
-                              : !wStatus.globalEnabled
-                                ? 'ล็อคระบบ'
-                                : wStatus.userEnabled
-                                  ? 'เปิดใช้งาน'
-                                  : 'ปิดใช้งาน'}
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Middle Section: Clean Uniform Description */}
-                    <div className="clean-card-middle">
-                      <p className="clean-card-desc">
-                        {meta.desc || 'ปรับแต่งข้อความ สี แอนิเมชัน และการแสดงผลบน OBS Studio'}
-                      </p>
-                    </div>
-
-                    {/* Footer Actions: Left: Single Status Dot | Right: Action Buttons */}
-                    <div className="clean-card-footer" onClick={(e) => e.stopPropagation()}>
-                      <div className="card-status-indicator">
+                    {/* Top Row: Status Dot on Left | Star & Quick Power Toggle on Right */}
+                    <div className="minimal-card-header" onClick={(e) => e.stopPropagation()}>
+                      <div className="card-status-indicator" title={wStatus.active ? "พร้อมแสดงผลบน OBS" : "ปิดใช้งานบน OBS"}>
                         <span className={`status-signal-dot ${!wStatus.hasAccess
                           ? 'dot-restricted'
                           : !wStatus.globalEnabled
@@ -2021,35 +1940,77 @@ function Dashboard() {
                         </span>
                       </div>
 
-                      <div className="clean-card-btn-group">
+                      <div className="clean-card-controls">
                         <button
                           type="button"
-                          className={`clean-card-copy-btn ${isCopied ? 'copied' : ''}`}
-                          title={isCopied ? "คัดลอก OBS URL สำเร็จ!" : "คัดลอก OBS Browser Source URL"}
-                          onClick={(e) => handleCopyCardUrl(w.id, e)}
+                          className={`clean-card-fav-btn ${isFav ? 'is-fav' : ''}`}
+                          onClick={(e) => toggleFavorite(w.id, e)}
+                          title={isFav ? "นำออกจากรายการโปรด" : "เพิ่มเป็นรายการโปรด"}
                         >
-                          {isCopied ? (
-                            <>
-                              <Check size={13} color="#34d399" />
-                              <span>คัดลอกแล้ว</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy size={13} />
-                              <span>OBS Link</span>
-                            </>
-                          )}
+                          <Star size={14} fill={isFav ? "#f59e0b" : "none"} stroke={isFav ? "#f59e0b" : "#94a3b8"} />
                         </button>
 
                         <button
                           type="button"
-                          className="clean-card-edit-btn"
-                          onClick={() => handleOpenWidget(w.id)}
+                          className={`clean-power-btn ${wStatus.active ? 'is-active' : 'is-inactive'} ${!wStatus.globalEnabled || !wStatus.hasAccess ? 'is-locked' : ''}`}
+                          disabled={!wStatus.globalEnabled || !wStatus.hasAccess || isUserToggleLoading}
+                          onClick={() => handleToggleUserWidget(w.id, wStatus.userEnabled)}
+                          title={
+                            !wStatus.hasAccess
+                              ? 'เฉพาะผู้ใช้ที่ได้รับอนุญาตจาก Admin'
+                              : !wStatus.globalEnabled
+                                ? 'แอดมินปิดปรับปรุงทั้งระบบ'
+                                : wStatus.userEnabled
+                                  ? 'เปิดอยู่ (คลิกเพื่อปิดใช้งานใน OBS)'
+                                  : 'ปิดอยู่ (คลิกเพื่อเปิดใช้งานใน OBS)'
+                          }
+                          style={{ padding: '0.22rem 0.5rem', fontSize: '0.68rem' }}
                         >
-                          <span>ปรับแต่ง</span>
-                          <ArrowRight size={13} />
+                          {isUserToggleLoading ? (
+                            <Loader2 size={11} className="spin" />
+                          ) : (
+                            <Power size={11} />
+                          )}
+                          <span>{wStatus.userEnabled ? 'ON' : 'OFF'}</span>
                         </button>
                       </div>
+                    </div>
+
+                    {/* Centered Body: Icon (Top) + Widget Name (Bottom) */}
+                    <div className="minimal-card-body">
+                      <div className="minimal-card-icon-box" style={{ background: meta.gradient }}>
+                        {React.isValidElement(meta.icon) ? React.cloneElement(meta.icon, { size: 32 }) : meta.icon}
+                      </div>
+
+                      <h3 className="minimal-card-title" title={w.name}>
+                        {w.name}
+                      </h3>
+
+                      <span className="minimal-card-category">
+                        {categoryLabel}
+                      </span>
+                    </div>
+
+                    {/* Footer: Quick OBS Link Copy Button */}
+                    <div className="minimal-card-footer" onClick={(e) => e.stopPropagation()}>
+                      <button
+                        type="button"
+                        className={`minimal-card-copy-btn ${isCopied ? 'copied' : ''}`}
+                        title={isCopied ? "คัดลอก OBS URL สำเร็จ!" : "คัดลอก OBS Browser Source URL"}
+                        onClick={(e) => handleCopyCardUrl(w.id, e)}
+                      >
+                        {isCopied ? (
+                          <>
+                            <Check size={12} color="#34d399" />
+                            <span>คัดลอกแล้ว</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy size={12} />
+                            <span>OBS Link</span>
+                          </>
+                        )}
+                      </button>
                     </div>
                   </div>
                 );
