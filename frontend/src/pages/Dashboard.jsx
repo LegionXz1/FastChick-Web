@@ -1881,6 +1881,7 @@ function Dashboard() {
                   <div className="skeleton-box skeleton-icon-center" />
                   <div className="skeleton-line skeleton-title-center" />
                   <div className="skeleton-line skeleton-sub-center" />
+                  <div className="skeleton-line skeleton-desc-center" />
                   <div className="skeleton-box skeleton-btn-center" />
                 </div>
               ))}
@@ -1989,6 +1990,12 @@ function Dashboard() {
                       <span className="minimal-card-category">
                         {categoryLabel}
                       </span>
+
+                      {meta.desc && (
+                        <p className="minimal-card-desc" title={meta.desc}>
+                          {meta.desc}
+                        </p>
+                      )}
                     </div>
 
                     {/* Footer: Quick OBS Link Copy Button */}
