@@ -1876,7 +1876,7 @@ function Dashboard() {
           {/* Cards Grid - Minimalist Layout: Icon Top + Name Bottom */}
           {isWidgetsLoading ? (
             <div className="my-overlays-grid">
-              {Array.from({ length: 8 }).map((_, i) => (
+              {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="overlay-card-skeleton minimal-layout">
                   <div className="skeleton-box skeleton-icon-center" />
                   <div className="skeleton-line skeleton-title-center" />

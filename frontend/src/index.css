@@ -3867,15 +3867,21 @@ input[type="range"]::-webkit-slider-thumb:hover {
   color: #f8fafc;
 }
 
-/* Responsive Fluid Grid for Minimalist Widget Cards */
+/* Clean 3-Column Grid for Minimalist Widget Cards */
 .my-overlays-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
   align-items: stretch;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 960px) {
+  .my-overlays-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
   .my-overlays-grid {
     grid-template-columns: 1fr;
   }
