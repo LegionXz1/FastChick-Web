@@ -68,7 +68,7 @@ function AppContent() {
   return (
     <>
       <TargetCursor
-        targetSelector=".cursor-target, .navbar-link, .navbar-logo, .navbar-user-trigger, .navbar-login-cta, .btn-island, .service-tab-btn, .hero-update-badge-btn"
+        targetSelector=".cursor-target, .navbar-link, .navbar-logo, .navbar-user-trigger, .navbar-login-cta, .btn-island, .service-tab-btn, .hero-update-badge-btn, .overlay-card, .clean-card-fav-btn, .clean-power-btn, .minimal-card-copy-btn, .clean-card-copy-btn, .clean-card-edit-btn, .my-overlays-tab, .view-mode-btn, .my-overlays-dock-btn, .editor-back-btn"
         spinDuration={0}
         hideDefaultCursor={false}
         parallaxOn

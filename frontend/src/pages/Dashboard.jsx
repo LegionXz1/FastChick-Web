@@ -1668,6 +1668,8 @@ function Dashboard() {
                 <button
                   type="button"
                   onClick={() => setShowUpdateModal(true)}
+                  className="cursor-target"
+                  data-cursor-label="Security"
                   style={{
                     fontSize: '0.65rem',
                     fontWeight: 700,
@@ -1695,7 +1697,8 @@ function Dashboard() {
               <button
                 type="button"
                 onClick={() => navigate('/settings')}
-                className="btn-island"
+                className="btn-island cursor-target"
+                data-cursor-label="Studio"
                 style={{
                   padding: '0.55rem 1rem',
                   fontSize: '0.85rem',
@@ -1717,7 +1720,8 @@ function Dashboard() {
                 <button
                   type="button"
                   onClick={() => navigate('/admin?tab=widgets')}
-                  className="dashboard-admin-primary-btn"
+                  className="dashboard-admin-primary-btn cursor-target"
+                  data-cursor-label="Admin"
                   title="ไปที่หน้า Admin เพื่อจัดการเปิด/ปิด Widget ทั้งระบบ"
                 >
                   <ShieldCheck size={16} />
@@ -1789,42 +1793,42 @@ function Dashboard() {
             <div className="my-overlays-tabs">
               <button
                 type="button"
-                className={`my-overlays-tab ${overlayTab === 'all' ? 'active' : ''}`}
+                className={`my-overlays-tab cursor-target ${overlayTab === 'all' ? 'active' : ''}`} data-cursor-label="All"
                 onClick={() => setOverlayTab('all')}
               >
                 ทั้งหมด ({widgets.length})
               </button>
               <button
                 type="button"
-                className={`my-overlays-tab ${overlayTab === 'active' ? 'active' : ''}`}
+                className={`my-overlays-tab cursor-target ${overlayTab === 'active' ? 'active' : ''}`} data-cursor-label="Active"
                 onClick={() => setOverlayTab('active')}
               >
                 เปิดใช้งาน ({activeWidgetsCount})
               </button>
               <button
                 type="button"
-                className={`my-overlays-tab ${overlayTab === 'twitch' ? 'active' : ''}`}
+                className={`my-overlays-tab cursor-target ${overlayTab === 'twitch' ? 'active' : ''}`} data-cursor-label="Twitch"
                 onClick={() => setOverlayTab('twitch')}
               >
                 สตรีม
               </button>
               <button
                 type="button"
-                className={`my-overlays-tab ${overlayTab === 'game' ? 'active' : ''}`}
+                className={`my-overlays-tab cursor-target ${overlayTab === 'game' ? 'active' : ''}`} data-cursor-label="Games"
                 onClick={() => setOverlayTab('game')}
               >
                 เกม
               </button>
               <button
                 type="button"
-                className={`my-overlays-tab ${overlayTab === 'spotify' ? 'active' : ''}`}
+                className={`my-overlays-tab cursor-target ${overlayTab === 'spotify' ? 'active' : ''}`} data-cursor-label="Music"
                 onClick={() => setOverlayTab('spotify')}
               >
                 เพลง
               </button>
               <button
                 type="button"
-                className={`my-overlays-tab ${overlayTab === 'favorites' ? 'active' : ''}`}
+                className={`my-overlays-tab cursor-target ${overlayTab === 'favorites' ? 'active' : ''}`} data-cursor-label="Favorites"
                 onClick={() => setOverlayTab('favorites')}
               >
                 ★ รายการโปรด ({favorites.length})
@@ -1843,7 +1847,8 @@ function Dashboard() {
                 {overlaySearch && (
                   <button
                     type="button"
-                    className="my-overlays-search-clear"
+                    className="my-overlays-search-clear cursor-target"
+                    data-cursor-label="Clear"
                     onClick={() => setOverlaySearch('')}
                     title="ล้างคำค้นหา"
                   >
@@ -1866,7 +1871,8 @@ function Dashboard() {
               <div className="view-mode-toggle-group" title="สลับรูปแบบมุมมองการ์ด Widget">
                 <button
                   type="button"
-                  className={`view-mode-btn ${dashboardViewMode === 'minimal' ? 'active' : ''}`}
+                  className={`view-mode-btn cursor-target ${dashboardViewMode === 'minimal' ? 'active' : ''}`}
+                  data-cursor-label="Minimal"
                   onClick={() => handleSetViewMode('minimal')}
                   title="มุมมองมินิมอล (3 คอลัมน์)"
                 >
@@ -1875,7 +1881,8 @@ function Dashboard() {
                 </button>
                 <button
                   type="button"
-                  className={`view-mode-btn ${dashboardViewMode === 'classic' ? 'active' : ''}`}
+                  className={`view-mode-btn cursor-target ${dashboardViewMode === 'classic' ? 'active' : ''}`}
+                  data-cursor-label="Classic"
                   onClick={() => handleSetViewMode('classic')}
                   title="มุมมองคลาสสิก (รายละเอียดเต็ม)"
                 >
@@ -1886,7 +1893,8 @@ function Dashboard() {
 
               <button
                 type="button"
-                className={`my-overlays-dock-btn ${copiedDockUrl ? 'copied' : ''}`}
+                className={`my-overlays-dock-btn cursor-target ${copiedDockUrl ? 'copied' : ''}`}
+                data-cursor-label={copiedDockUrl ? "Copied" : "OBS Dock"}
                 onClick={handleCopyDockUrl}
                 title="คัดลอกลิงก์ OBS Custom Browser Dock สำหรับควบคุมทุก Widget จากใน OBS"
                 style={{
@@ -1979,7 +1987,8 @@ function Dashboard() {
                   return (
                     <div
                       key={w.id}
-                      className={`overlay-card ${wStatus.active ? 'is-active' : 'is-disabled'} ${!wStatus.hasAccess ? 'is-restricted' : ''}`}
+                      className={`overlay-card cursor-target ${wStatus.active ? 'is-active' : 'is-disabled'} ${!wStatus.hasAccess ? 'is-restricted' : ''}`}
+                      data-cursor-label={w.name}
                       onClick={() => handleOpenWidget(w.id)}
                     >
                       {/* Top Row: Icon + Title + Category + Controls */}
@@ -2001,7 +2010,8 @@ function Dashboard() {
                         <div className="clean-card-controls" onClick={(e) => e.stopPropagation()}>
                           <button
                             type="button"
-                            className={`clean-card-fav-btn ${isFav ? 'is-fav' : ''}`}
+                            className={`clean-card-fav-btn cursor-target ${isFav ? 'is-fav' : ''}`}
+                            data-cursor-label={isFav ? "Unfavorite" : "Favorite"}
                             onClick={(e) => toggleFavorite(w.id, e)}
                             title={isFav ? "นำออกจากรายการโปรด" : "เพิ่มเป็นรายการโปรด"}
                           >
@@ -2010,7 +2020,8 @@ function Dashboard() {
 
                           <button
                             type="button"
-                            className={`clean-power-btn ${wStatus.active ? 'is-active' : 'is-inactive'} ${!wStatus.globalEnabled || !wStatus.hasAccess ? 'is-locked' : ''}`}
+                            className={`clean-power-btn cursor-target ${wStatus.active ? 'is-active' : 'is-inactive'} ${!wStatus.globalEnabled || !wStatus.hasAccess ? 'is-locked' : ''}`}
+                            data-cursor-label={wStatus.userEnabled ? "Turn OFF" : "Turn ON"}
                             disabled={!wStatus.globalEnabled || !wStatus.hasAccess || isUserToggleLoading}
                             onClick={() => handleToggleUserWidget(w.id, wStatus.userEnabled)}
                             title={
@@ -2066,7 +2077,8 @@ function Dashboard() {
                         <div className="clean-card-btn-group">
                           <button
                             type="button"
-                            className={`clean-card-copy-btn ${isCopied ? 'copied' : ''}`}
+                            className={`clean-card-copy-btn cursor-target ${isCopied ? 'copied' : ''}`}
+                            data-cursor-label={isCopied ? "Copied" : "Copy OBS"}
                             title={isCopied ? "คัดลอก OBS URL สำเร็จ!" : "คัดลอก OBS Browser Source URL"}
                             onClick={(e) => handleCopyCardUrl(w.id, e)}
                           >
@@ -2085,7 +2097,8 @@ function Dashboard() {
 
                           <button
                             type="button"
-                            className="clean-card-edit-btn"
+                            className="clean-card-edit-btn cursor-target"
+                            data-cursor-label="Customize"
                             onClick={() => handleOpenWidget(w.id)}
                           >
                             <span>ปรับแต่ง</span>
@@ -2101,7 +2114,8 @@ function Dashboard() {
                 return (
                   <div
                     key={w.id}
-                    className={`overlay-card minimal-layout ${wStatus.active ? 'is-active' : 'is-disabled'} ${!wStatus.hasAccess ? 'is-restricted' : ''}`}
+                    className={`overlay-card minimal-layout cursor-target ${wStatus.active ? 'is-active' : 'is-disabled'} ${!wStatus.hasAccess ? 'is-restricted' : ''}`}
+                    data-cursor-label={w.name}
                     onClick={() => handleOpenWidget(w.id)}
                     title={`คลิกเพื่อเปิดสตูดิโอตั้งค่า ${w.name}`}
                   >
@@ -2130,7 +2144,8 @@ function Dashboard() {
                       <div className="clean-card-controls">
                         <button
                           type="button"
-                          className={`clean-card-fav-btn ${isFav ? 'is-fav' : ''}`}
+                          className={`clean-card-fav-btn cursor-target ${isFav ? 'is-fav' : ''}`}
+                          data-cursor-label={isFav ? "Unfavorite" : "Favorite"}
                           onClick={(e) => toggleFavorite(w.id, e)}
                           title={isFav ? "นำออกจากรายการโปรด" : "เพิ่มเป็นรายการโปรด"}
                         >
@@ -2139,7 +2154,8 @@ function Dashboard() {
 
                         <button
                           type="button"
-                          className={`minimal-card-copy-btn ${isCopied ? 'copied' : ''}`}
+                          className={`minimal-card-copy-btn cursor-target ${isCopied ? 'copied' : ''}`}
+                          data-cursor-label={isCopied ? "Copied" : "Copy OBS"}
                           title={isCopied ? "คัดลอก OBS URL สำเร็จ!" : "คัดลอก OBS Browser Source URL"}
                           onClick={(e) => handleCopyCardUrl(w.id, e)}
                         >
@@ -2183,7 +2199,8 @@ function Dashboard() {
                     <div className="minimal-card-footer" onClick={(e) => e.stopPropagation()}>
                       <button
                         type="button"
-                        className={`clean-power-btn minimal-power-toggle ${wStatus.active ? 'is-active' : 'is-inactive'} ${!wStatus.globalEnabled || !wStatus.hasAccess ? 'is-locked' : ''}`}
+                        className={`clean-power-btn minimal-power-toggle cursor-target ${wStatus.active ? 'is-active' : 'is-inactive'} ${!wStatus.globalEnabled || !wStatus.hasAccess ? 'is-locked' : ''}`}
+                        data-cursor-label={wStatus.userEnabled ? "Turn OFF" : "Turn ON"}
                         disabled={!wStatus.globalEnabled || !wStatus.hasAccess || isUserToggleLoading}
                         onClick={() => handleToggleUserWidget(w.id, wStatus.userEnabled)}
                         title={
@@ -2218,7 +2235,8 @@ function Dashboard() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1.15rem', minWidth: 0 }}>
               <button
                 type="button"
-                className="editor-back-btn"
+                className="editor-back-btn cursor-target"
+                data-cursor-label="Back"
                 onClick={handleBackToGallery}
                 title="กลับไปยังหน้ารวม Overlays"
               >
@@ -2272,7 +2290,8 @@ function Dashboard() {
                 return (
                   <button
                     type="button"
-                    className={`clean-power-btn ${curWs.active ? 'is-active' : 'is-inactive'} ${!curWs.globalEnabled ? 'is-locked' : ''}`}
+                    className={`clean-power-btn cursor-target ${curWs.active ? 'is-active' : 'is-inactive'} ${!curWs.globalEnabled ? 'is-locked' : ''}`}
+                    data-cursor-label={curWs.userEnabled ? "Turn OFF" : "Turn ON"}
                     disabled={!curWs.globalEnabled || isCurLoading}
                     onClick={() => handleToggleUserWidget(selectedWidget, curWs.userEnabled)}
                     title={
@@ -2305,7 +2324,8 @@ function Dashboard() {
                       type="button"
                       onClick={!isDis ? handleTriggerPreview : undefined}
                       disabled={isDis}
-                      className="btn-island accent"
+                      className="btn-island accent cursor-target"
+                      data-cursor-label="Test Stream"
                       title={isDis ? 'กรุณาเปิดใช้งาน Widget ก่อนทดสอบ' : 'ทดสอบส่งผลการสุ่ม / แสดงผลทันที'}
                       style={{
                         padding: '0.48rem 1.15rem',
@@ -2326,7 +2346,8 @@ function Dashboard() {
                       type="button"
                       onClick={!isDis ? handleCopyUrl : undefined}
                       disabled={isDis}
-                      className="btn-island primary"
+                      className="btn-island primary cursor-target"
+                      data-cursor-label={copiedUrl ? "Copied" : "Copy OBS"}
                       title={isDis ? 'กรุณาเปิดใช้งาน Widget ก่อนคัดลอก OBS Link' : 'คัดลอก OBS Link'}
                       style={{
                         padding: '0.48rem 1.15rem',
