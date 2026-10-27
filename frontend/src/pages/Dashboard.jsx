@@ -2119,28 +2119,8 @@ function Dashboard() {
                     onClick={() => handleOpenWidget(w.id)}
                     title={`คลิกเพื่อเปิดสตูดิโอตั้งค่า ${w.name}`}
                   >
-                    {/* Top Row: Status Dot on Left | Star & Quick OBS Link on Right */}
+                    {/* Top Row: Star & Quick OBS Link on Left | Status Dot on Right */}
                     <div className="minimal-card-header" onClick={(e) => e.stopPropagation()}>
-                      <div className="card-status-indicator" title={wStatus.active ? "พร้อมแสดงผลบน OBS" : "ปิดใช้งานบน OBS"}>
-                        <span className={`status-signal-dot ${!wStatus.hasAccess
-                          ? 'dot-restricted'
-                          : !wStatus.globalEnabled
-                            ? 'dot-maintenance'
-                            : wStatus.active
-                              ? 'dot-live'
-                              : 'dot-idle'
-                          }`} />
-                        <span className="status-signal-text">
-                          {!wStatus.hasAccess
-                            ? 'จำกัดสิทธิ์'
-                            : !wStatus.globalEnabled
-                              ? 'ปิดปรับปรุง'
-                              : wStatus.active
-                                ? 'พร้อมใช้'
-                                : 'ปิดใช้งาน'}
-                        </span>
-                      </div>
-
                       <div className="clean-card-controls">
                         <button
                           type="button"
@@ -2171,6 +2151,26 @@ function Dashboard() {
                             </>
                           )}
                         </button>
+                      </div>
+
+                      <div className="card-status-indicator" title={wStatus.active ? "พร้อมแสดงผลบน OBS" : "ปิดใช้งานบน OBS"}>
+                        <span className={`status-signal-dot ${!wStatus.hasAccess
+                          ? 'dot-restricted'
+                          : !wStatus.globalEnabled
+                            ? 'dot-maintenance'
+                            : wStatus.active
+                              ? 'dot-live'
+                              : 'dot-idle'
+                          }`} />
+                        <span className="status-signal-text">
+                          {!wStatus.hasAccess
+                            ? 'จำกัดสิทธิ์'
+                            : !wStatus.globalEnabled
+                              ? 'ปิดปรับปรุง'
+                              : wStatus.active
+                                ? 'พร้อมใช้'
+                                : 'ปิดใช้งาน'}
+                        </span>
                       </div>
                     </div>
 
