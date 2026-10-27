@@ -1953,26 +1953,21 @@ function Dashboard() {
 
                         <button
                           type="button"
-                          className={`clean-power-btn ${wStatus.active ? 'is-active' : 'is-inactive'} ${!wStatus.globalEnabled || !wStatus.hasAccess ? 'is-locked' : ''}`}
-                          disabled={!wStatus.globalEnabled || !wStatus.hasAccess || isUserToggleLoading}
-                          onClick={() => handleToggleUserWidget(w.id, wStatus.userEnabled)}
-                          title={
-                            !wStatus.hasAccess
-                              ? 'เฉพาะผู้ใช้ที่ได้รับอนุญาตจาก Admin'
-                              : !wStatus.globalEnabled
-                                ? 'แอดมินปิดปรับปรุงทั้งระบบ'
-                                : wStatus.userEnabled
-                                  ? 'เปิดอยู่ (คลิกเพื่อปิดใช้งานใน OBS)'
-                                  : 'ปิดอยู่ (คลิกเพื่อเปิดใช้งานใน OBS)'
-                          }
-                          style={{ padding: '0.22rem 0.5rem', fontSize: '0.68rem' }}
+                          className={`minimal-card-copy-btn ${isCopied ? 'copied' : ''}`}
+                          title={isCopied ? "คัดลอก OBS URL สำเร็จ!" : "คัดลอก OBS Browser Source URL"}
+                          onClick={(e) => handleCopyCardUrl(w.id, e)}
                         >
-                          {isUserToggleLoading ? (
-                            <Loader2 size={11} className="spin" />
+                          {isCopied ? (
+                            <>
+                              <Check size={12} color="#34d399" />
+                              <span>คัดลอกแล้ว</span>
+                            </>
                           ) : (
-                            <Power size={11} />
+                            <>
+                              <Copy size={12} />
+                              <span>OBS Link</span>
+                            </>
                           )}
-                          <span>{wStatus.userEnabled ? 'ON' : 'OFF'}</span>
                         </button>
                       </div>
                     </div>
@@ -1998,25 +1993,29 @@ function Dashboard() {
                       )}
                     </div>
 
-                    {/* Footer: Quick OBS Link Copy Button */}
+                    {/* Footer: Quick Power Toggle Button */}
                     <div className="minimal-card-footer" onClick={(e) => e.stopPropagation()}>
                       <button
                         type="button"
-                        className={`minimal-card-copy-btn ${isCopied ? 'copied' : ''}`}
-                        title={isCopied ? "คัดลอก OBS URL สำเร็จ!" : "คัดลอก OBS Browser Source URL"}
-                        onClick={(e) => handleCopyCardUrl(w.id, e)}
+                        className={`clean-power-btn minimal-power-toggle ${wStatus.active ? 'is-active' : 'is-inactive'} ${!wStatus.globalEnabled || !wStatus.hasAccess ? 'is-locked' : ''}`}
+                        disabled={!wStatus.globalEnabled || !wStatus.hasAccess || isUserToggleLoading}
+                        onClick={() => handleToggleUserWidget(w.id, wStatus.userEnabled)}
+                        title={
+                          !wStatus.hasAccess
+                            ? 'เฉพาะผู้ใช้ที่ได้รับอนุญาตจาก Admin'
+                            : !wStatus.globalEnabled
+                              ? 'แอดมินปิดปรับปรุงทั้งระบบ'
+                              : wStatus.userEnabled
+                                ? 'เปิดอยู่ (คลิกเพื่อปิดใช้งานใน OBS)'
+                                : 'ปิดอยู่ (คลิกเพื่อเปิดใช้งานใน OBS)'
+                        }
                       >
-                        {isCopied ? (
-                          <>
-                            <Check size={12} color="#34d399" />
-                            <span>คัดลอกแล้ว</span>
-                          </>
+                        {isUserToggleLoading ? (
+                          <Loader2 size={13} className="spin" />
                         ) : (
-                          <>
-                            <Copy size={12} />
-                            <span>OBS Link</span>
-                          </>
+                          <Power size={13} />
                         )}
+                        <span>{wStatus.userEnabled ? 'ON' : 'OFF'}</span>
                       </button>
                     </div>
                   </div>
