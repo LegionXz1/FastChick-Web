@@ -3875,17 +3875,15 @@ input[type="range"]::-webkit-slider-thumb:hover {
   align-items: stretch;
 }
 
-.my-overlays-grid.view-minimal {
-  grid-template-columns: repeat(3, 1fr);
-}
-
+.my-overlays-grid.view-minimal,
 .my-overlays-grid.view-classic {
-  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
 }
 
 @media (max-width: 960px) {
   .my-overlays-grid,
-  .my-overlays-grid.view-minimal {
+  .my-overlays-grid.view-minimal,
+  .my-overlays-grid.view-classic {
     grid-template-columns: repeat(2, 1fr);
   }
 }
