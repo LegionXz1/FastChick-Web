@@ -6486,16 +6486,17 @@ input[type="range"]::-webkit-slider-thumb:hover {
   margin-top: 0.85rem;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  justify-content: space-between;
   width: 100%;
   z-index: 2;
 }
 
 .minimal-power-toggle {
-  padding: 0.38rem 1.15rem;
-  font-size: 0.78rem;
+  padding: 0.32rem 0.95rem;
+  font-size: 0.76rem;
+  height: 30px;
   border-radius: 9999px;
+  box-sizing: border-box;
 }
 
 .minimal-card-copy-btn {

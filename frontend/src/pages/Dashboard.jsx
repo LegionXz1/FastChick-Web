@@ -2119,7 +2119,7 @@ function Dashboard() {
                     onClick={() => handleOpenWidget(w.id)}
                     title={`คลิกเพื่อเปิดสตูดิโอตั้งค่า ${w.name}`}
                   >
-                    {/* Top Row: Star & Quick OBS Link on Left | Status Dot on Right */}
+                    {/* Top Row: Star on Left | Status Dot on Right */}
                     <div className="minimal-card-header" onClick={(e) => e.stopPropagation()}>
                       <div className="clean-card-controls">
                         <button
@@ -2130,26 +2130,6 @@ function Dashboard() {
                           title={isFav ? "นำออกจากรายการโปรด" : "เพิ่มเป็นรายการโปรด"}
                         >
                           <Star size={14} fill={isFav ? "#f59e0b" : "none"} stroke={isFav ? "#f59e0b" : "#94a3b8"} />
-                        </button>
-
-                        <button
-                          type="button"
-                          className={`minimal-card-copy-btn cursor-target ${isCopied ? 'copied' : ''}`}
-                          data-cursor-label={isCopied ? "Copied" : "Copy OBS"}
-                          title={isCopied ? "คัดลอก OBS URL สำเร็จ!" : "คัดลอก OBS Browser Source URL"}
-                          onClick={(e) => handleCopyCardUrl(w.id, e)}
-                        >
-                          {isCopied ? (
-                            <>
-                              <Check size={12} color="#34d399" />
-                              <span>คัดลอกแล้ว</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy size={12} />
-                              <span>OBS Link</span>
-                            </>
-                          )}
                         </button>
                       </div>
 
@@ -2195,7 +2175,7 @@ function Dashboard() {
                       )}
                     </div>
 
-                    {/* Footer: Quick Power Toggle Button */}
+                    {/* Footer: Power Toggle on Left | OBS Link on Right */}
                     <div className="minimal-card-footer" onClick={(e) => e.stopPropagation()}>
                       <button
                         type="button"
@@ -2219,6 +2199,26 @@ function Dashboard() {
                           <Power size={13} />
                         )}
                         <span>{wStatus.userEnabled ? 'ON' : 'OFF'}</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        className={`minimal-card-copy-btn cursor-target ${isCopied ? 'copied' : ''}`}
+                        data-cursor-label={isCopied ? "Copied" : "Copy OBS"}
+                        title={isCopied ? "คัดลอก OBS URL สำเร็จ!" : "คัดลอก OBS Browser Source URL"}
+                        onClick={(e) => handleCopyCardUrl(w.id, e)}
+                      >
+                        {isCopied ? (
+                          <>
+                            <Check size={12} color="#34d399" />
+                            <span>คัดลอกแล้ว</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy size={12} />
+                            <span>OBS Link</span>
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
