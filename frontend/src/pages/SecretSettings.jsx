@@ -4603,15 +4603,6 @@ export default function SecretSettings() {
 
             {/* Quick Actions under preview */}
             <div className="preview-quick-actions">
-              <button
-                type="button"
-                className="btn-island accent"
-                onClick={handleSimulate}
-                style={{ padding: '0.45rem 0.95rem', fontSize: '0.82rem' }}
-              >
-                <Play size={14} />
-                <span>จำลองการแลกแต้ม</span>
-              </button>
 
               <button
                 type="button"
