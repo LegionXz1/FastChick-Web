@@ -32,6 +32,12 @@
     "value": true,
     "group": "Clips & Video"
   },
+  "clipOnlyMode": {
+    "type": "checkbox",
+    "label": "แสดงเฉพาะคลิปวิดีโอ (Pure Clip - ไม่มีกรอบและข้อความตกแต่ง)",
+    "value": false,
+    "group": "Clips & Video"
+  },
   "clipDuration": {
     "type": "slider",
     "label": "ระยะเวลาเล่นคลิปวิดีโอ (วินาที)",

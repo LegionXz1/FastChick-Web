@@ -2506,6 +2506,58 @@ export default function SecretSettings() {
                   </div>
                 )}
 
+                {/* Twitch Shoutout Auto Raid Switch Card (Quick Settings) */}
+                {schema?.autoRaidShoutout && (
+                  <div
+                    className="switch-card"
+                    style={{ marginBottom: '1rem' }}
+                    onClick={() => {
+                      const currentVal = fieldData.autoRaidShoutout !== undefined
+                        ? fieldData.autoRaidShoutout
+                        : (schema.autoRaidShoutout.value ?? true);
+                      handleFieldChange('autoRaidShoutout', !currentVal);
+                    }}
+                  >
+                    <div className="switch-card-info">
+                      <span className="switch-card-label">
+                        {schema.autoRaidShoutout.label || 'เปิดใช้ Shoutout อัตโนมัติเมื่อมีคนเรดมา'}
+                      </span>
+                      <span className="switch-card-desc">
+                        เมื่อมีสตรีมเมอร์ท่านอื่น Raid เข้ามาหา ระบบจะยิง Shoutout แนะนำช่องของเขาขึ้นจอ OBS ให้อัตโนมัติทันที
+                      </span>
+                    </div>
+                    <div className={`switch-pill ${(fieldData.autoRaidShoutout !== undefined ? fieldData.autoRaidShoutout : (schema.autoRaidShoutout.value ?? true)) ? 'is-on' : ''}`}>
+                      <div className="switch-pill-knob" />
+                    </div>
+                  </div>
+                )}
+
+                {/* Twitch Shoutout Pure Clip Mode Switch Card (Quick Settings) */}
+                {schema?.clipOnlyMode && (
+                  <div
+                    className="switch-card"
+                    style={{ marginBottom: '1rem' }}
+                    onClick={() => {
+                      const currentVal = fieldData.clipOnlyMode !== undefined
+                        ? fieldData.clipOnlyMode
+                        : (schema.clipOnlyMode.value ?? false);
+                      handleFieldChange('clipOnlyMode', !currentVal);
+                    }}
+                  >
+                    <div className="switch-card-info">
+                      <span className="switch-card-label">
+                        {schema.clipOnlyMode.label || 'แสดงเฉพาะคลิปวิดีโอ (Pure Clip - ไม่มีกรอบและข้อความตกแต่ง)'}
+                      </span>
+                      <span className="switch-card-desc">
+                        แสดงเฉพาะตัววิดีโอคลิปไฮไลท์แบบเพียวๆ โดยซ่อนกรอบ ข้อความ และองค์ประกอบตกแต่งทั้งหมด
+                      </span>
+                    </div>
+                    <div className={`switch-pill ${(fieldData.clipOnlyMode !== undefined ? fieldData.clipOnlyMode : (schema.clipOnlyMode.value ?? false)) ? 'is-on' : ''}`}>
+                      <div className="switch-pill-knob" />
+                    </div>
+                  </div>
+                )}
+
                 {/* 2. Quick Test & Roll Action Card */}
                 {selectedWidget !== 'spotify-sr' && (
                   <div className="setting-card">
@@ -2905,7 +2957,7 @@ export default function SecretSettings() {
                   <p className="setting-card-desc">เปิดหรือปิดเฉพาะส่วนที่ต้องการให้แสดง</p>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '0.85rem' }}>
-                    {Object.entries(schema || {}).filter(([k, f]) => f.type === 'checkbox' && (k.startsWith('show') || k === 'enableTextShadow' || k === 'enableVisualOverlay' || k.toLowerCase().includes('display')) && isFieldMatching(k, f)).map(([key, field]) => (
+                    {Object.entries(schema || {}).filter(([k, f]) => f.type === 'checkbox' && (k.startsWith('show') || k === 'enableTextShadow' || k === 'enableVisualOverlay' || k.toLowerCase().includes('display') || k.toLowerCase().includes('clip')) && isFieldMatching(k, f)).map(([key, field]) => (
                       <div
                         key={key}
                         className="switch-card"

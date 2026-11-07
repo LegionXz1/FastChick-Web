@@ -6,6 +6,7 @@ const API_BASE = 'https://legionx.alwaysdata.net';
 // Default configuration settings
 let config = {
   autoRaidShoutout: true,
+  clipOnlyMode: false,
   headerText: 'GO CHECK OUT',
   subHeaderText: 'Support this awesome creator on Twitch!',
   displayDuration: 15,
@@ -49,6 +50,19 @@ function applySettings(data) {
 
   const ctaEl = document.getElementById('so-cta');
   if (ctaEl && config.subHeaderText) ctaEl.textContent = config.subHeaderText;
+
+  // Real-time update for Clip Only Mode
+  const container = document.getElementById('so-container');
+  const videoEl = document.getElementById('so-video');
+  if (container && container.classList.contains('active')) {
+    const isPure = (config.clipOnlyMode === true || config.clipOnlyMode === 'true' || config.clipOnlyMode === 1);
+    const hasActiveVideo = videoEl && videoEl.src && videoEl.src !== window.location.href;
+    if (isPure && hasActiveVideo) {
+      container.classList.add('clip-only-mode');
+    } else {
+      container.classList.remove('clip-only-mode');
+    }
+  }
 }
 
 // Listen to StreamElements / Solocast events
@@ -179,7 +193,7 @@ async function displayShoutout(channelName) {
   // 3. Fetch Featured Clip
   if (config.playClip) {
     try {
-      const res = await fetch(`${API_BASE}/getuserclips.php?channel=${encodeURIComponent(cleanName)}&limit=1&random=true`);
+      const res = await fetch(`${API_BASE}/getuserclips.php?channel=${encodeURIComponent(cleanName)}&limit=5&random=true`);
       if (res.ok) {
         const json = await res.json();
         if (json.data && json.data.length > 0) {
@@ -286,6 +300,8 @@ async function displayShoutout(channelName) {
   }
 
   // Play Shoutout Chime Sound
+  playNotificationSound();
+
   // กำหนดระยะเวลาแสดงผล (ถ้าเล่นคลิปให้ใช้ clipDuration หรือถ้าไม่มีคลิปให้ใช้ displayDuration)
   const durationSec = hasVideo
     ? (parseInt(config.clipDuration || config.displayDuration, 10) || 15)
@@ -301,8 +317,14 @@ async function displayShoutout(channelName) {
     progressBar.classList.add('anim-progress');
   }
 
-  // Show Container
+  // Show Container (Check Pure Clip Mode)
   if (container) {
+    const isPure = (config.clipOnlyMode === true || config.clipOnlyMode === 'true' || config.clipOnlyMode === 1) && hasVideo;
+    if (isPure) {
+      container.classList.add('clip-only-mode');
+    } else {
+      container.classList.remove('clip-only-mode');
+    }
     container.classList.add('active');
   }
 
@@ -330,6 +352,9 @@ function hideShoutout() {
 
   // Wait for transition before processing next in queue
   setTimeout(() => {
+    if (container) {
+      container.classList.remove('clip-only-mode');
+    }
     isShowing = false;
     currentShowingChannel = '';
     processQueue();
